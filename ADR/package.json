@@ -1,0 +1,25 @@
+{
+  "name": "adr",
+  "version": "1.0.0",
+  "description": "asyn data retrieval",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brando3303/nw.git"
+  },
+  "keywords": [
+    "website"
+  ],
+  "author": "Brandon Bailey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brando3303/nw/issues"
+  },
+  "homepage": "https://github.com/brando3303/nw#readme",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}
