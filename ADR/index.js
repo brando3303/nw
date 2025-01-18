@@ -13,9 +13,10 @@ const notion = new Client({ auth: apiKey });
 async function main() {
 
 
-    let results = await searchRootAll();
+    let results = await searchRootAll(1);
 
     console.log("length: " + results.length);
+    console.log(JSON.stringify(results[4], null, 1));
     // const response = await notion.search({
     //     //query: '2025',
     //     // filter: {
