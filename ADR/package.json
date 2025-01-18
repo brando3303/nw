@@ -2,9 +2,11 @@
   "name": "adr",
   "version": "1.0.0",
   "description": "asyn data retrieval",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node --env-file=.env index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
   },
   "homepage": "https://github.com/brando3303/nw#readme",
   "dependencies": {
-    "@notionhq/client": "^2.2.15"
+    "@notionhq/client": "^2.2.15",
+    "dotenv": "^16.4.7"
   }
 }
