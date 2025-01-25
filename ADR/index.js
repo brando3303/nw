@@ -27,11 +27,11 @@ async function main() {
     }
 
     console.log(results.positions[0].players[0].name);
-    const response = await notion.blocks.children.list({
-        block_id: results.positions[0].players[0].pageId,
-        page_size: 100,
-    });
-    console.log(JSON.stringify(response,null,2));
+    // const response = await notion.blocks.children.list({
+    //     block_id: results.positions[0].players[0].pageId,
+    //     page_size: 100,
+    // });
+    // console.log(JSON.stringify(response,null,2));
     console.log(await playerPageToHTML(results.positions[0].players[0].pageId));
 
     // const response = await notion.search({
