@@ -12,6 +12,7 @@ export class App extends Component {
   }
 
   loadHome = () => {
+    console.log("loading");
     fetch(API_URL + '/playerRoster')
       .then(this.doListResp)
       .catch(this.doListError);
@@ -40,6 +41,7 @@ export class App extends Component {
   }
 
   doListResp = (res) => {
+    console.log("getting response");
     if (res.status !== 200) {
       res.text()
          .then((msg) => this.doListError(`bad status code ${res.status}: ${msg}`))
@@ -61,7 +63,7 @@ export class App extends Component {
     }
   }
   doListError = (msg) => {
-    console.error(msg)
+    console.error("error fetching from server: " + msg)
   }
 }
 
