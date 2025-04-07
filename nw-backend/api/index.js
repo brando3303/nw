@@ -5,6 +5,22 @@ const routes = require("./routes");
 
 const port = 3001;
 const app = express();
+const cors = require('cors');
+    
+const allowedOrigins = ['https://nsf-nateleland.vercel.app'];
+const corsOptions = {
+    origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) { //also allow requests made directly to the server
+        callback(null, true);
+    } else {
+        callback(new Error('Not allowed by CORS'));
+    }
+    },
+};
+app.use(cors(corsOptions));
+    
+
+
 
 app.use(bodyParser.json());
 app.get('/playerList', routes.getPlayerList);
