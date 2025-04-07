@@ -33,7 +33,7 @@ export class App extends Component {
   }
 
   renderHome = () => {
-    return <p>home temp, data = ${this.state.data}</p>;
+    return <p>home temp, data = ${JSON.stringify(this.state.data)}</p>;
   }
 
   renderPlayer = (name) => {
