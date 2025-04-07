@@ -43,17 +43,19 @@ export class App extends Component {
   doListResp = (res) => {
     console.log("getting response");
     if (res.status !== 200) {
+      console.log("res code not 200");
       res.text()
          .then((msg) => this.doListError(`bad status code ${res.status}: ${msg}`))
          .catch(() => this.doListError("Failed to parse error response message"));
     } else {
+      console.log("res code = 200");
       res.json()
         .then(this.doListJson)
         .catch(() => this.doListError("Failed to parse response data as JSON"))
     }
   }
 
-  doListJSON = (data) => {
+  doListJson = (data) => {
     console.log("reached")
     if (!Array.isArray(data)) {
       this.doListError();
