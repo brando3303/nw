@@ -55,10 +55,11 @@ export class App extends Component {
       this.doListError();
     } else {
       this.state.data = data;
+      this.state.show = "home";
     }
   }
   doListError = (msg) => {
-    console.log(msg)
+    console.error(msg)
   }
 }
 
