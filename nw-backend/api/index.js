@@ -7,17 +7,17 @@ const port = 3000;
 const app = express();
 const cors = require('cors');
     
-const allowedOrigins = ['https://nsf-nateleland.vercel.app'];
-const corsOptions = {
-    origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) { //also allow requests made directly to the server
-        callback(null, true);
-    } else {
-        callback(new Error('Not allowed by CORS'));
-    }
-    },
-};
-app.use(cors(corsOptions));
+// const allowedOrigins = ['https://nsf-nateleland.vercel.app'];
+// const corsOptions = {
+//     origin: function (origin, callback) {
+//     if (allowedOrigins.indexOf(origin) !== -1 || !origin) { //also allow requests made directly to the server
+//         callback(null, true);
+//     } else {
+//         callback(new Error('Not allowed by CORS'));
+//     }
+//     },
+// };
+// app.use(cors(corsOptions));
     
 
 
