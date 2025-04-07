@@ -54,8 +54,7 @@ export class App extends Component {
     if (!Array.isArray(data)) {
       this.doListError();
     } else {
-      this.state.data = data;
-      this.state.show = "home";
+      this.setState({show:"home", data:data});
     }
   }
   doListError = (msg) => {
