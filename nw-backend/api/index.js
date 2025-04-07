@@ -1,6 +1,6 @@
-import express from "express";
-import postgres from "postgres";
-import bodyParser from "body-parser";
+const express = require("express");
+const postgres = require("postgres");
+const bodyParser = require("body-parser");
 
 const port = 3000;
 const app = express();
