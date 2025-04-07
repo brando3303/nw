@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 
 
 app.use(bodyParser.json());
-app.get('/playerList', routes.getPlayerList);
+app.get('/playerRoster', routes.getPlayerList);
 app.get('/player', routes.getPlayer);
 app.listen(port, () => console.log(`Server listening on port ${port}`));
 

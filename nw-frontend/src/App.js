@@ -12,7 +12,7 @@ export class App extends Component {
   }
 
   loadHome = () => {
-    fetch(API_URL + '/playerList')
+    fetch(API_URL + '/playerRoster')
       .then(this.doListResp)
       .catch(this.doListError);
   }
