@@ -3,7 +3,7 @@ const postgres = require("postgres");
 const bodyParser = require("body-parser");
 const routes = require("./routes");
 
-const port = 3000;
+const port = 3001;
 const app = express();
 app.use(bodyParser.json());
 app.get('/playerList', routes.getPlayerList);
