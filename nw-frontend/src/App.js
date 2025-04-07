@@ -52,9 +52,11 @@ export class App extends Component {
   }
 
   doListJSON = (data) => {
+    console.log("reached")
     if (!Array.isArray(data)) {
       this.doListError();
     } else {
+      console.log("setting state")
       this.setState({show:"home", data:data});
     }
   }
