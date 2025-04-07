@@ -1,30 +1,33 @@
 import { Client as Client } from "@notionhq/client"
 import { config } from "dotenv"
+import { sql, createPool } from "@vercel/postgres"
+import {DataBaseHelper} from "./DataBaseHelper.js"
 
 config();
 
 
 
-const pageId = process.env.NOTION_PAGE_ID_SCOUTING;
 const apiKey = process.env.NOTION_API_KEY_NATE_LELAND_SCOUTING;
+const vercelConnectionKey = process.env.VERCEL_POSTGRES_DB_URL;
+console.log(vercelConnectionKey)
 
 const notion = new Client({ auth: apiKey });
 
 async function main() {
 
-
-    let results = await searchRootAll(3);
+    // db testing
+    let h = new DataBaseHelper(vercelConnectionKey);
+    await h.init();
+    await h.insertMany([{name:"nqqqt", position: "scot", playerpage:"lackig"}, {name:"ndddt", position: "scot", playerpage:"lackig"}]);
+    console.log([{name:"nqqqt", position: "scot", playerpage:"lackig"}, {name:"ndddt", position: "scot", playerpage:"lackig"}]);
+    // get the results from the entire database (max 3 pages of pages)
+    let results = await searchRootAll(10);
 
     console.log("length: " + results.length);
-   // _printNames(results);
+    // create the datastructure of the entire player database
+    //console.log(JSON.stringify(results, null, 2));
     results = processSearchData(results);
     //console.log(JSON.stringify(results, null, 1));
-    let count = 0;
-    for (let i of results.positions) {
-        for (let j of i.players) {
-            //console.log(j.name + " " + count++);
-        }
-    }
 
     console.log(results.positions[0].players[0].name);
     // const response = await notion.blocks.children.list({
@@ -33,7 +36,8 @@ async function main() {
     // });
     // console.log(JSON.stringify(response,null,2));
     console.log(await playerPageToHTML(results.positions[0].players[0].pageId));
-
+    //console.log(await positionListToPlayerList(results.positions))
+    h.insertMany(await positionListToPlayerList(results.positions));
     // const response = await notion.search({
     //     //query: '2025',
     //     // filter: {
@@ -53,7 +57,7 @@ async function main() {
 
 // creates an HTML page from the contents of the page pageId refers to.
 // currently limited to 100 blocks. supports paragraphs and bullet lists.
-// returns null if error occurs (silently haha). returns an string containing
+// returns null if error occurs (silently haha). returns a string containing
 // HTML
 const playerPageToHTML = async (pageId) => {
     // get notion page connected to player
@@ -76,17 +80,23 @@ const playerPageToHTML = async (pageId) => {
                 bulleted = true;
                 outHTML += "<ul>";
             }
-            outHTML += "<li>" + block.bulleted_list_item.rich_text[0].plain_text + "</li>"
-            
+            if (block.bulleted_list_item.rich_text != null && block.bulleted_list_item.rich_text[0] != null && 
+                block.bulleted_list_item.rich_text[0].plain_text != null) {
+                outHTML += "<li>" + block.bulleted_list_item.rich_text[0].plain_text + "</li>";
+            }
         }
     }
     outHTML += "</div>"
     return outHTML;
 }
 
+// gets the text paragraph from a text block
 const getParagraph = (block) => {
     if (block.type !== "paragraph") return null;
-    return block.paragraph.rich_text[0].plain_text;
+    if (block.paragraph.rich_text != null && block.paragraph.rich_text[0] != null && 
+        block.paragraph.rich_text[0].plain_text != null) {
+        return block.paragraph.rich_text[0].plain_text;
+    }
 }
 
 // post search notion root num_pages times. places all results into an array and returns it.
@@ -197,6 +207,36 @@ const getPageInSearchParent = (pageArr, parentPageId) => {
     }
     return out;
 
+}
+
+const getPlayerFromProcRes = (name, results) => {
+    for (let pos of results.position) {
+        for (let plr of pos.positions) {
+            if (plr.name === name) {
+                return plr;
+            }
+        }
+    }
+    return null;
+}
+
+const positionListToPlayerList = async (positions) => {
+    const list = [];
+    for (let pos of positions) {
+        for (let player of pos.players) {
+            if (player.name == null || pos.positionName == null ||player.pageId == null) {
+                console.log(player.name + pos.positionName + playerPageToHTML(player.pageId));
+            }
+            if (typeof player.name ==='string' && typeof pos.positionName === 'string'){
+                list.push({
+                    name: player.name,
+                    position: pos.positionName,
+                    playerpage: await playerPageToHTML(player.pageId)
+                });
+            }
+        }
+    }   
+    return list;
 }
 
 main();
