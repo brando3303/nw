@@ -18,6 +18,7 @@ export class App extends Component {
   }
 
   render = () => {
+    console.log("rerender");
     if (this.state.show === "loadingHome") {
       this.loadHome();
       return <p>Loading...</p>;
