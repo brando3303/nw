@@ -8,7 +8,7 @@ let API_URL = "https://nw-api.vercel.app"
 export class App extends Component {
   constructor(props) {
     super(props)
-    this.state = {show: "loadingHome", data: {}};
+    this.state = {show: "loadingHome", data: {}, name:null};
   }
 
   loadHome = () => {
@@ -66,12 +66,14 @@ export class App extends Component {
   );
 
   onPlayerClick = (player) => {
-    console.log(player);
+    fetch(API_URL + '/player')
+    .then(this.doPlayerResp)
+    .catch(this.doPlayerError);
   }
   
 
   renderPlayer = (name) => {
-    return <p>player: </p>
+    return <p>player: {this.state.name}</p>
   }
 
   doListResp = (res) => {
@@ -95,11 +97,52 @@ export class App extends Component {
       this.doListError();
     } else {
       console.log("setting state")
-      this.setState({show:"home", data:data});
+      this.setState({show:"player", data:data});
     }
   }
   doListError = (msg) => {
     console.error("error fetching from server: " + msg)
+  }
+
+  doPlayerResp = (res) => {
+    console.log("getting response");
+    if (res.status !== 200) {
+      console.log("res code not 200");
+      res.text()
+         .then((msg) => this.doPlayerError(`bad status code ${res.status}: ${msg}`))
+         .catch(() => this.doPlayerError("Failed to parse error response message"));
+    } else {
+      console.log("res code = 200");
+      res.json()
+        .then(this.doPlayerJson)
+        .catch(() => this.doPlayerError("Failed to parse response data as JSON"))
+    }
+  }
+
+  doPlayerJson = (players) => {
+    console.log("reached")
+    if (!Array.isArray(players)) {
+      this.doPlayerError();
+    } else {
+      playerData = players[0];
+      console.log("setting state: " + JSON.stringify(playerData));
+      this.addPlayerPageToState(playerData);
+    }
+  }
+  doPlayerError = (msg) => {
+    console.error("error fetching from server: " + msg)
+  }
+
+  // also sets state to "player"
+  addPlayerPageToState = (player) => {
+    let index = this.state.data.findIndex(p => p.name === player.name);
+    this.state.data[index].playerPage = player.playerpage;
+    this.setState({show:"player", data:this.state.data, name:player.name});
+  }
+
+  getPlayer = (name) => {
+    let index = this.state.data.findIndex(p => p.name === player.name);
+    return this.state.data[index];
   }
 }
 
