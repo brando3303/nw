@@ -124,7 +124,7 @@ export class App extends Component {
     if (!Array.isArray(players)) {
       this.doPlayerError();
     } else {
-      playerData = players[0];
+      let playerData = players[0];
       console.log("setting state: " + JSON.stringify(playerData));
       this.addPlayerPageToState(playerData);
     }
@@ -141,7 +141,7 @@ export class App extends Component {
   }
 
   getPlayer = (name) => {
-    let index = this.state.data.findIndex(p => p.name === player.name);
+    let index = this.state.data.findIndex(p => p.name === name);
     return this.state.data[index];
   }
 }

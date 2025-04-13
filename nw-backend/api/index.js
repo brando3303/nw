@@ -7,7 +7,7 @@ const port = 3000;
 const app = express();
 const cors = require('cors');
     
-const allowedOrigins = ['https://nsf-nateleland.vercel.app', 'https://localhost:3000'];
+const allowedOrigins = ['https://nsf-nateleland.vercel.app', 'http://localhost:3000', ];
 const corsOptions = {
     origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) { //also allow requests made directly to the server
