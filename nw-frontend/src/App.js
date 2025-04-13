@@ -11,6 +11,11 @@ export class App extends Component {
     this.state = {show: "loadingHome", data: {}, name:null};
   }
 
+  setState = (state) => {
+    super.setState(state);
+    console.log("setting state.show to: " + state.show)
+  }
+
   loadHome = () => {
     console.log("loading");
     fetch(API_URL + '/playerRoster')
@@ -66,14 +71,16 @@ export class App extends Component {
   );
 
   onPlayerClick = (player) => {
-    fetch(API_URL + '/player')
+    console.log("onPlayerClick")
+    fetch(API_URL + '/player?name=' + player.name)
     .then(this.doPlayerResp)
     .catch(this.doPlayerError);
   }
   
 
   renderPlayer = (name) => {
-    return <p>player: {this.state.name}</p>
+    let p = this.getPlayer(name);
+    return     <div dangerouslySetInnerHTML={{ __html: p.playerPage }}/>
   }
 
   doListResp = (res) => {
@@ -97,7 +104,7 @@ export class App extends Component {
       this.doListError();
     } else {
       console.log("setting state")
-      this.setState({show:"player", data:data});
+      this.setState({show:"home", data:data});
     }
   }
   doListError = (msg) => {
