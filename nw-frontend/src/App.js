@@ -33,8 +33,42 @@ export class App extends Component {
   }
 
   renderHome = () => {
-    return <p>home temp, data = ${JSON.stringify(this.state.data)}</p>;
+    return this.renderHomePlayers(this.state.data);
   }
+
+  renderHomePlayers = (players) => (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {players.map((player, index) => (
+        <div
+          key={index}
+          style={{
+            border: '1px solid #ccc',
+            padding: '1rem',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            backgroundColor: '#f9f9f9',
+          }}
+          onClick={() => this.onPlayerClick(player)}
+        >
+          <h3>{player.name}</h3>
+          <p>Position: {player.position}</p>
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // Prevents the card's onClick from firing
+              this.onPlayerClick(player);
+            }}
+          >
+            View Player
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+
+  onPlayerClick = (player) => {
+    console.log(player);
+  }
+  
 
   renderPlayer = (name) => {
     return <p>player: </p>
