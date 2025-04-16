@@ -30,6 +30,11 @@ const getPlayerFromDB = async (sql, name) => {
     return await sql`SELECT * FROM players WHERE name = ${name}`;
 }
 
+// route that pulls everything from notion.
+const updateAll = async (req, res) => {
+    return;
+}
+
 module.exports = {
     getPlayerList,
     getPlayer

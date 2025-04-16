@@ -3,7 +3,6 @@ import React, { ChangeEvent, Component, MouseEvent } from 'react';
 import './App.css';
 
 let API_URL = "https://nw-api.vercel.app"
-//API_URL = "http://localhost:3001"
 
 export class App extends Component {
   constructor(props) {

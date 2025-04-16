@@ -1,0 +1,94 @@
+/*FAFAFA, FFFFFF, FFFAFA*/
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&display=swap');
+
+
+.navbar {
+  display: flex;
+  align-items: center;
+  height: 90px;
+  background-color: #FAFAFA;
+  top: 0;
+  width: 100%;
+  border-style: solid;
+
+  border-width: 1px;
+  border-bottom-color: rgb(223, 223, 223);
+  border-bottom-width: 1px;
+  box-shadow: 2px, 10px, #1e1e1e;
+}
+
+.navbar_item {
+  color: #707070;
+  padding: 0 24px;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  transition: transform 0.1s ease, color 0.2s ease;
+}
+  
+  .navbar_item:hover {
+    color:rgb(11, 11, 11);
+    transform: scale(1.07);
+  }
+
+  .navbar_item_back {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+  }
+    
+    .navbar_item_back:hover {
+      background-color: #eeeeee;
+    }
+
+  .navbar img {
+    height: 90px;  /* Adjust as needed */
+    width: auto;
+    margin-right: 16px;
+  }
+
+
+  .playerpage_text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.125rem;
+    line-height: 1.8;
+    color: #333;
+    background-color: #faf9f7;
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 1.5rem;
+    text-align: justify;
+    letter-spacing: 0.3px;
+    word-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+
+  }
+
+  .playerpage_loading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #333;
+    display: flex;
+    justify-content: center; /* centers horizontally */
+    align-items: center;     /* centers vertically */
+    height:90vh;
+  }
+ 
+
+  .slideInText {
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  
+  /* Trigger this class when you want the text to slide in */
+  .slideInText.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
