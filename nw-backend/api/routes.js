@@ -1,8 +1,11 @@
 const express = require("express");
 const postgres = require("postgres");
+const { NotionHelper } = require("./NotionHelper");
 require('dotenv').config();
 
 const connectionString = process.env.VERCEL_POSTGRES_DB_URL;
+const apiKey = process.env.NOTION_API_KEY_NATE_LELAND_SCOUTING;
+
 
 const getPlayerList = async (req, res) => {
     const sql = await getDB();
@@ -13,7 +16,7 @@ const getPlayerList = async (req, res) => {
 
 const getPlayer = async (req, res) => {
     const sql = await getDB();
-    const player = await getPlayerFromDB(sql, req.query.name);
+    const player = await getPlayerFromDB(sql, req.query.id);
     res.status(200).send(JSON.stringify(player));
     return;
 }
@@ -23,19 +26,22 @@ const getDB = async () => {
 }
 
 const getPlayerListFromDB = async (sql) => {
-    return await sql`SELECT name, position FROM players`;
+    return await sql`SELECT id, name, position, score, playerpage_prev, player_img FROM players`;
 }
 
-const getPlayerFromDB = async (sql, name) => {
-    return await sql`SELECT * FROM players WHERE name = ${name}`;
+const getPlayerFromDB = async (sql, id) => {
+    return await sql`SELECT * FROM players WHERE id = ${id}`;
 }
 
 // route that pulls everything from notion.
 const updateAll = async (req, res) => {
-    return;
+    const nh = new NotionHelper();
+    await nh.init();
+    await nh.updateNotion(20);
 }
 
 module.exports = {
     getPlayerList,
-    getPlayer
+    getPlayer,
+    updateAll
 }
