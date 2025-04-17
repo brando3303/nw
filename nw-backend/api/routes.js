@@ -26,7 +26,7 @@ const getDB = async () => {
 }
 
 const getPlayerListFromDB = async (sql) => {
-    return await sql`SELECT id, name, position, score, playerpage_prev, player_img FROM players`;
+    return await sql`SELECT id, name, position, score, playerpage_prev, player_img, team_img FROM players`;
 }
 
 const getPlayerFromDB = async (sql, id) => {
