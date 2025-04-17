@@ -114,8 +114,8 @@ class NotionHelper {
                                 team_img: player.icon.file.url,
                                 date_edited: player.last_edited_time,
                             }
-                            if (this.getPageTitle(player) == "Earnest Greene") {
-                                console.log(JSON.stringify(player));
+                            if (this.getPageTitle(player) == "Cam Ward (85)") {
+                                console.log(JSON.stringify(player, null, 2));
                             }
                             positionEntry.players.push(playerEntry);
                         }
