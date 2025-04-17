@@ -2,7 +2,7 @@
     background: #ffffff;
     border: 1px solid #e0e0e0;
     width: 280px;
-    height: 320px;
+    height: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,23 +21,25 @@
   .images {
     position: relative;
     width: 100%;
-    height: 50%;
+    height: 14vh; /* or whatever fixed height you want for the container */
+    overflow: hidden; /* important to hide the cropped parts */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* align content to top */
   }
   
   .playerImg_cont {
     width: 100%;
-    height: 40%; /* or 60vh, or whatever % of parent you want */
+    height: 100%; /* or 60vh, or whatever % of parent you want */
     overflow: hidden; /* hide cropped overflow */
     position: relative;
   }
 
   .playerImg {
     width: 100%;
-    height: 100%;
+    height: auto; /* Let the image height be natural */
     object-fit: cover;
+    object-position: top; /* show the top of the image */
   }
   
   .teamImg {
@@ -78,13 +80,13 @@
   
   .score {
     font-size: 1.3rem;
-    color: #666;
+    color: #212121;
     font-weight: bold;
     font-family: serif;
 
   }
   .score_num {
     font-size: 2.7rem;
-    color: rgb(85, 95, 97);
+    color: rgb(72, 72, 72);
     font-weight: bold;
   }

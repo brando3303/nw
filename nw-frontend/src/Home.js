@@ -52,7 +52,7 @@ export function Home(props) {
 
   const renderHome = () => (
     <div className={styles.main_cont}>
-      <div className={styles.scouting_header}>Scouting Reports</div>
+      <div className={styles.scouting_header}>Player Evaluations</div>
       <div className={styles.reports_cont}>
         {roster.map((player, index) => (
           // <div
