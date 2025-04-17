@@ -12,12 +12,12 @@
 }
 
 .scouting_header {
-    color: rgb(229, 37, 37);
+    color: rgb(219, 28, 28);
     font-family: "Special Gothic Expanded One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size: 60pt;
-    text-shadow: rgb(212, 14, 14) .5px .5px;
+    font-size: 50pt;
+    text-shadow: rgb(151, 21, 21) 2px 0px 2px;
     padding-bottom: 30px;
     padding-left: 3%;
     padding-top: 2%;

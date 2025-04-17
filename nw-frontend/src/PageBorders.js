@@ -71,14 +71,14 @@ export class TitleBar extends Component {
 export class Footer extends Component {
     render = () => {
         return (<footer className={styles.footer}>
-            <div className={"footer-content"}>
-              <div className={'footer-section'}>
-                <a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer">
-                  LinkedIn
+            <div className={styles.footer_content}>
+              <div className={styles.footer_section}>
+                <a href="https://www.linkedin.com/in/nate-leland-3b255b346/" target="_blank" rel="noopener noreferrer">
+                  LinkedIn/NateLeland
                 </a>
               </div>
-              <div className="footer-section">
-                <p>Contact: <a href="mailto:you@example.com">you@example.com</a></p>
+              <div className={styles.footer_section}>
+                <p>Contact: <a href="nfleland@gmail.com">nfleland@gmail.com</a></p>
               </div>
             </div>
           </footer>);

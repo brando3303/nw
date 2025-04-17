@@ -43,7 +43,12 @@ export function PlayerPage (props) {
     
     const renderPlayerPage = () => {
 
-        return    <SlideInText player={player}/>
+        return (<div>
+        <div className={styles.images}>
+            <img src={player.player_img} className={styles.playerImg}/>
+        </div>
+            <SlideInText player={player}/>
+        </div>)
     }
     
     

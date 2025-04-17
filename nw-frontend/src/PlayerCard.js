@@ -22,7 +22,7 @@ const PlayerCard = ({ player }) => {
       <div className={styles.info}>
         <h2 className={styles.name}>{player.name}</h2>
         <p className={styles.position}>{player.position}</p>
-        <p className={styles.score}>Score: {player.score}</p>
+        <p className={styles.score}>Score: <text className={styles.score_num}>{player.score}</text></p>
       </div>
     </a>
   );
