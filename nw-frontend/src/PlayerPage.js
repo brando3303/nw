@@ -19,7 +19,7 @@ export function PlayerPage (props) {
     
     useEffect(() => {
         console.log(props.name);
-        fetch(API_URL + '/player?name=' + props.name)
+        fetch(API_URL + '/player?id=' + props.id)
         .then(doPlayerResp)
         .catch(doPlayerError);
     }, [])

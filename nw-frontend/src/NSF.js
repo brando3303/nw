@@ -34,7 +34,7 @@ export function NSFApp () {
                     <Routes>
                         <Route path="/" element={<Home setRoster={setRoster} roster={roster}/>}/>
                         <Route path="/home" element={<Home setRoster={setRoster} roster={roster}/>}/>
-                        <Route path="/player" element={<PlayerPage name={query.get("name")} />}/>
+                        <Route path="/player" element={<PlayerPage id={query.get("id")} />}/>
                     </Routes>
                     <Footer/>
             </div>

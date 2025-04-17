@@ -23,6 +23,7 @@ export class TitleBar extends Component {
               <Link to={"/home"} className={styles.navbar_item_back}>
                 <span className={styles.navbar_item}>About</span>
               </Link>
+              <p className={styles.subtext}>College Football scouting reports by Nate Leland</p>
             </div>
         )};
         // return (

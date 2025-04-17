@@ -8,6 +8,8 @@ import {
   useNavigate
 } from "react-router-dom";
 import { API_URL } from './NSF';
+import PlayerCard from './PlayerCard';
+import styles from './HomeStyles.module.css'
 
 // class component for the home page of the site. facillitates retreiving the globa; data from the server api, sets the data of the parent.
 // requires a setData prop and globalData prop. setData is a function which sets global data of the parent.
@@ -27,8 +29,7 @@ export function Home(props) {
 
   const render = () => {
     if (show === "LoadHome") {
-      renderLoadHome();
-      return <p>Loading...</p>;
+      return renderLoadHome();;
     } else if (show === "Home") {
       return renderHome();
     }
@@ -44,35 +45,42 @@ export function Home(props) {
     fetch(API_URL + '/playerRoster')
       .then(doListResp)
       .catch(doListError);
+    return (<div className={styles.homepage_loading}>
+                <p>Loading...</p>
+                </div>)
   }
 
   const renderHome = () => (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {roster.map((player, index) => (
-        <div
-          key={index}
-          style={{
-            border: '1px solid #ccc',
-            padding: '1rem',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            backgroundColor: '#f9f9f9',
-          }}
-          onClick={() => onPlayerClick(player)}
-        >
-          <h3>{player.name}</h3>
-          <p>Position: {player.position}</p>
-          <button
-            to={"/player?name=" + player.name}
-            onClick={(e) => {
-              e.stopPropagation(); // Prevents the card's onClick from firing
-              onPlayerClick(player);
-            }}
-          >
-            View Player
-          </button>
-        </div>
-      ))}
+    <div className={styles.main_cont}>
+      <div className={styles.scouting_header}>Scouting Reports</div>
+      <div className={styles.reports_cont}>
+        {roster.map((player, index) => (
+          // <div
+          //   key={index}
+          //   style={{
+          //     border: '1px solid #ccc',
+          //     padding: '1rem',
+          //     borderRadius: '8px',
+          //     cursor: 'pointer',
+          //     backgroundColor: '#f9f9f9',
+          //   }}
+          //   onClick={() => onPlayerClick(player)}
+          // >
+          //   <h3>{player.name}</h3>
+          //   <p>Position: {player.position}</p>
+          //   <button
+          //     to={"/player?name=" + player.name}
+          //     onClick={(e) => {
+          //       e.stopPropagation(); // Prevents the card's onClick from firing
+          //       onPlayerClick(player);
+          //     }}
+          //   >
+          //     View Player
+          //   </button>
+          // </div>
+          <PlayerCard player={player}/>
+        ))}
+      </div>
     </div>
   );
 
@@ -85,7 +93,7 @@ export function Home(props) {
   const onPlayerClick = (player) => {
     console.log("onPlayerClick")
     // const navigate = useNavigate();
-    navigate("/player?name=" + player.name); 
+    navigate("/player?id=" + player.id); 
     // fetch(API_URL + '/player?name=' + player.name)
     //   .then(this.doPlayerResp)
     //   .catch(this.doPlayerError);
@@ -116,11 +124,10 @@ export function Home(props) {
     if (!Array.isArray(data)) {
       doListError();
     } else {
-      console.log("setting state")
-      const playerMap = data//new Map(data.map(player => [player.name, player]));
-      props.setRoster(playerMap);
       if (roster == null && show != "Home") {
-        setRoster(playerMap);
+        console.log("setting state")
+        props.setRoster(data);
+        setRoster(data);
         setShow("Home");
       }
     }
