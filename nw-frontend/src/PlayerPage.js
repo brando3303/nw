@@ -44,6 +44,7 @@ export function PlayerPage (props) {
     const renderPlayerPage = () => {
 
         return (<div>
+        <div className={styles.playername}>{player.name}: {player.score}/100</div>
         <div className={styles.images}>
             <img src={player.player_img} className={styles.playerImg}/>
         </div>

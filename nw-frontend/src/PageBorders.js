@@ -16,7 +16,6 @@ export class TitleBar extends Component {
         return (
             <div className={styles.navbar}>
               <img src={NSFlogo} alt={"Logo"}/>
-
               <Link to={"/home"} className={styles.navbar_item_back}>
                 <span className={styles.navbar_item}>Home</span>
               </Link>

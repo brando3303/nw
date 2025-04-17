@@ -10,12 +10,6 @@
   background-color: #FAFAFA;
   top: 0;
   width: 100%;
-  border-style: solid;
-
-  border-width: 1px;
-  border-bottom-color: rgb(223, 223, 223);
-  border-bottom-width: 1px;
-  box-shadow: 2px, 10px, #1e1e1e;
 }
 
 .navbar_item {
@@ -90,6 +84,17 @@
     align-items: center;     /* centers vertically */
     height:90vh;
   }
+
+  .playername {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    color: #333;
+    background-color: rgb(239, 239, 239);
+    display: flex;
+    justify-content: center; /* centers horizontally */
+    align-items: center;     /* centers vertically */
+    height:12vh;
+  }
  
 
   .slideInText {
@@ -138,11 +143,11 @@
   }
 
   .footer_content {
-
+    padding: 0;
   }
 
   .footer_section {
-
+    padding: 0;
 
   }
   
