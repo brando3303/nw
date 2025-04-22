@@ -1,6 +1,5 @@
 const express = require("express");
 const postgres = require("postgres");
-const { NotionHelper } = require("../../ADR/NotionHelper");
 require('dotenv').config();
 
 const connectionString = process.env.VERCEL_POSTGRES_DB_URL;
