@@ -23,8 +23,10 @@
   "dependencies": {
     "@notionhq/client": "^2.2.15",
     "@vercel/postgres": "^0.10.0",
+    "@yao-pkg/pkg": "^6.4.0",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
+    "make": "^0.8.1",
     "os": "^0.1.2",
     "path": "^0.12.7",
     "postgres": "^3.4.5"

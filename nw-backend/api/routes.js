@@ -33,18 +33,7 @@ const getPlayerFromDB = async (sql, id) => {
     return await sql`SELECT * FROM players WHERE id = ${id}`;
 }
 
-// route that pulls everything from notion.
-const updateAll = async (req, res) => {
-    if (req.query.pwd != apiPWD) {
-        res.status(400).send("invalid request")
-    }
-    const nh = new NotionHelper();
-    await nh.init();
-    await nh.updateNotion(20);
-}
-
 module.exports = {
     getPlayerList,
     getPlayer,
-    updateAll
 }

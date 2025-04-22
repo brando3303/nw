@@ -40,7 +40,8 @@ const program = async () => {
 
     await sql`INSERT INTO players ${sql(data)}`;
 
-    console.log("Data sent.")
+    console.log("Data sent.");
+    process.exit();
 }
 
-await program();
+program();
