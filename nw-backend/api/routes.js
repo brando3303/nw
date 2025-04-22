@@ -1,10 +1,10 @@
 const express = require("express");
 const postgres = require("postgres");
-const { NotionHelper } = require("./NotionHelper");
+const { NotionHelper } = require("../../ADR/NotionHelper");
 require('dotenv').config();
 
 const connectionString = process.env.VERCEL_POSTGRES_DB_URL;
-const apiKey = process.env.NOTION_API_KEY_NATE_LELAND_SCOUTING;
+const apiPWD = process.env.NW_API_PASSWORD;
 
 
 const getPlayerList = async (req, res) => {
@@ -35,6 +35,9 @@ const getPlayerFromDB = async (sql, id) => {
 
 // route that pulls everything from notion.
 const updateAll = async (req, res) => {
+    if (req.query.pwd != apiPWD) {
+        res.status(400).send("invalid request")
+    }
     const nh = new NotionHelper();
     await nh.init();
     await nh.updateNotion(20);

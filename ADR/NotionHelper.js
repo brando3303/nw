@@ -2,12 +2,12 @@ const { Client } = require('@notionhq/client');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { DataBaseHelper } = require('./DataBaseHelper.js');
+const { DataBaseHelper } = require('../nw-backend/api/DataBaseHelper.js');
 
 const apiKey = process.env.NOTION_API_KEY_NATE_LELAND_SCOUTING;
 const vercelConnectionKey = process.env.VERCEL_POSTGRES_DB_URL;
 
-const notion = new Client({ auth: apiKey });
+
 
 
 /*
@@ -24,21 +24,29 @@ player := {
 }
 */
 
+/* usage: create a new NotionHelper, call getData, and then
+ * processData to get the complete player data for 
+ * placing into the database
+ */
 class NotionHelper {
+    constructor(notion_key) {
+        this.notion_key = notion_key;
+        this.data = null;
 
-    init = async () => {
-        this.h = new DataBaseHelper(vercelConnectionKey);
-        await this.h.init();
+        this.notion = new Client({ auth: notion_key });
     }
 
-    updateNotion = async (numPages) => {
-        console.log("getting notion pages...");
-        this.results = await this.searchRootAll(numPages);
-        console.log("finished notion retrieve. processing data... ");
-        this.results = this.processSearchData(this.results);
-        console.log("finished processing data. sending to database...");
-        await this.h.insertMany(await this.positionListToPlayerList(this.results.positions));
-        console.log("operation complete");
+    // populates the data field of this NotionHelper. 
+    getData = async () => {
+        this.data = await this.searchRootAll(20);
+        console.log(this.data)
+        this.data = this.processSearchData(this.data)
+    }
+
+    // processes the data into a Player list and returns it. 
+    processData = async () => {
+        console.log(this.data)
+        return await this.positionListToPlayerList(this.data.positions);
     }
 
     // post search notion root num_pages times. places all results into an array and returns it.
@@ -48,7 +56,7 @@ class NotionHelper {
         let start_cursor = undefined;
         for (let i = 0; has_more && i < num_pages; i++) {
             console.log("new call, res len: " + results.length);
-            const response = await notion.search({
+            const response = await this.notion.search({
                 //query: '2025',
                 // filter: {
                 //     value: 'page',
@@ -179,7 +187,7 @@ class NotionHelper {
     // HTML
     playerPageToHTML = async (pageId) => {
         // get notion page connected to player
-        const page = await notion.blocks.children.list({
+        const page = await this.notion.blocks.children.list({
             block_id: pageId,
             page_size: 100,
         });
@@ -214,7 +222,7 @@ class NotionHelper {
         if (block.type !== "paragraph") return null;
         if (block.paragraph.rich_text != null && block.paragraph.rich_text[0] != null && 
             block.paragraph.rich_text[0].plain_text != null) {
-            return block.paragraph.rich_text[0].plain_text;
+            return block.paragraph.rich_text[0].plain_text === undefined ? "" : block.paragraph.rich_text[0].plain_text;
         }
     }
 
