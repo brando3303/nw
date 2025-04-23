@@ -28,14 +28,14 @@ export function NSFApp () {
     const render = () => {
         return (
             <div>
-                    <Analytics/>
-                    <TitleBar/>
-                    <Routes>
-                        <Route path="/" element={<Home setRoster={setRoster} roster={roster}/>}/>
-                        <Route path="/home" element={<Home setRoster={setRoster} roster={roster}/>}/>
-                        <Route path="/player" element={<PlayerPage id={query.get("id")} />}/>
-                    </Routes>
-                    <Footer/>
+                <Analytics/>
+                <TitleBar/>
+                <Routes>
+                    <Route path="/" element={<Home setRoster={setRoster} roster={roster}/>}/>
+                    <Route path="/home" element={<Home setRoster={setRoster} roster={roster}/>}/>
+                    <Route path="/player" element={<PlayerPage id={query.get("id")} />}/>
+                </Routes>
+                <Footer/>
             </div>
 
 

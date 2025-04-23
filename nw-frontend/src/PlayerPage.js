@@ -1,14 +1,4 @@
-import ReactDOM from 'react-dom/client';
-import React, { ChangeEvent, Component, MouseEvent, useState, useEffect, Error } from 'react';
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-    Link,
-    getNavigation,
-    useLocation,
-    useParams
-} from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import { API_URL } from './NSF';
 import styles from './Styles.module.css';
 
@@ -16,43 +6,10 @@ import styles from './Styles.module.css';
 export function PlayerPage (props) {
     let [show, setShow] = useState("loadPlayer");
     let [player, setPlayer] = useState(null);
-    
-    useEffect(() => {
-        console.log(props.name);
-        fetch(API_URL + '/player?id=' + props.id)
-        .then(doPlayerResp)
-        .catch(doPlayerError);
-    }, [])
 
-    const render = () => {
-        console.log("rerender");
-        if (show === "loadPlayer") {
-          return renderPlayerPageLoading();
-        } else if (show === "player") {
-          return renderPlayerPage();
-        } else if (show == "error") {
-            return renderError();
-        }
-    }
-    
-    const renderPlayerPageLoading = () => {
-        return (<div className={styles.playerpage_loading}>
-            <p>Loading...</p>
-            </div>)
-    }
-    
-    const renderPlayerPage = () => {
-
-        return (<div>
-        <div className={styles.playername}>{player.name}: {player.score}</div>
-        <div className={styles.images}>
-            <img src={player.player_img} className={styles.playerImg}/>
-        </div>
-            <SlideInText player={player}/>
-        </div>)
-    }
-    
-    
+///////////////////////////////////////////////////////////////////////////////
+// network response handlers
+///////////////////////////////////////////////////////////////////////////////
     const doPlayerResp = (res) => {
         console.log("getting response");
         if (res.status !== 200) {
@@ -73,7 +30,7 @@ export function PlayerPage (props) {
         if (!Array.isArray(players)) {
             doPlayerError();
         } else {
-            if (players.length == 0) {
+            if (players.length === 0) {
                 setShow("error");
                 return;
             }
@@ -86,6 +43,51 @@ export function PlayerPage (props) {
 
     const doPlayerError = (msg) => {
         console.error("error fetching player from server: " + msg)
+    }
+
+///////////////////////////////////////////////////////////////////////////////
+// hooks
+///////////////////////////////////////////////////////////////////////////////
+
+    
+    useEffect(() => {
+        console.log(props.name);
+        fetch(API_URL + '/player?id=' + props.id)
+        .then(doPlayerResp)
+        .catch(doPlayerError);
+    }, [])
+
+///////////////////////////////////////////////////////////////////////////////
+// state renderers
+///////////////////////////////////////////////////////////////////////////////
+
+
+    const render = () => {
+        console.log("rerender");
+        if (show === "loadPlayer") {
+          return renderPlayerPageLoading();
+        } else if (show === "player") {
+          return renderPlayerPage();
+        } else if (show === "error") {
+            return renderError();
+        }
+    }
+    
+    const renderPlayerPageLoading = () => {
+        return (<div className={styles.playerpage_loading}>
+            <p>Loading...</p>
+            </div>)
+    }
+    
+    const renderPlayerPage = () => {
+
+        return (<div>
+        <div className={styles.playername}>{player.name}: {player.score}</div>
+        <div className={styles.images}>
+            <img src={player.player_img} alt={player.name} className={styles.playerImg}/>
+        </div>
+            <SlideInText player={player}/>
+        </div>)
     }
 
     const renderError = () => {
