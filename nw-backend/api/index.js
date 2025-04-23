@@ -1,5 +1,4 @@
 const express = require("express");
-const postgres = require("postgres");
 const bodyParser = require("body-parser");
 const routes = require("./routes");
 

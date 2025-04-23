@@ -11,8 +11,6 @@ const database_key = process.env.VERCEL_POSTGRES_DB_URL;
 const notion_key = process.env.NOTION_API_KEY_NATE_LELAND_SCOUTING;
 const notion_page = process.env.NOTION_PAGE_ID_SCOUNTING;
 
-const NUM_PAGES = 20
-
 const program = async () => {
     console.log("NSF-NATELELAND.com data retreival. Copyright (c) Brandon C Bailey.")
     console.log("Retreiving notion pages...")

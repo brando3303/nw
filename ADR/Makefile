@@ -25,4 +25,4 @@ all:
 		--platform=node
 
 	# Package into an executable inside builds/
-	npx pkg -t node20-macos-x64 $(BUILD_DIR)/update.js --output $(BUILD_DIR)/update
+	npx pkg -t node20-win-x64 $(BUILD_DIR)/update.js --output $(BUILD_DIR)/update-win-x64

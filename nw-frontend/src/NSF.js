@@ -1,19 +1,17 @@
-import ReactDOM from 'react-dom/client';
 import {
-    BrowserRouter,
     Routes,
     Route,
     useLocation,
-
   } from "react-router-dom";
-import React, { ChangeEvent, Component, MouseEvent, useState } from 'react';
-import App from './App';
+import React, { useState } from 'react';
 import { Home } from './Home';
 import { PlayerPage } from './PlayerPage' 
 import { TitleBar, Footer } from './PageBorders'
+import { Analytics } from '@vercel/analytics/react';
 
 export const API_URL = "https://nw-api.vercel.app";
 
+// hook for getting query params
 function useQuery() {
     const { search } = useLocation();
   
@@ -30,6 +28,7 @@ export function NSFApp () {
     const render = () => {
         return (
             <div>
+                    <Analytics/>
                     <TitleBar/>
                     <Routes>
                         <Route path="/" element={<Home setRoster={setRoster} roster={roster}/>}/>

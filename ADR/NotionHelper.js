@@ -1,14 +1,4 @@
 const { Client } = require('@notionhq/client');
-const dotenv = require('dotenv');
-dotenv.config();
-
-const { DataBaseHelper } = require('../nw-backend/api/DataBaseHelper.js');
-
-const apiKey = process.env.NOTION_API_KEY_NATE_LELAND_SCOUTING;
-const vercelConnectionKey = process.env.VERCEL_POSTGRES_DB_URL;
-
-
-
 
 /*
 player := {

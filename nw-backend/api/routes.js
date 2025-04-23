@@ -1,10 +1,7 @@
-const express = require("express");
 const postgres = require("postgres");
 require('dotenv').config();
 
 const connectionString = process.env.VERCEL_POSTGRES_DB_URL;
-const apiPWD = process.env.NW_API_PASSWORD;
-
 
 const getPlayerList = async (req, res) => {
     const sql = await getDB();
@@ -21,7 +18,7 @@ const getPlayer = async (req, res) => {
 }
 
 const getDB = async () => {
-    return await postgres(connectionString);
+    return postgres(connectionString);
 }
 
 const getPlayerListFromDB = async (sql) => {
