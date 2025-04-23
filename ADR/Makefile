@@ -6,9 +6,9 @@ ifneq (,$(wildcard .env))
   export $(shell sed 's/=.*//' .env)
 endif
 
-# Directory for build outputs
+# Directory for build outputs. use win, macos, or linux.
 BUILD_DIR=builds
-DEVICE=mac
+DEVICE=macos
 
 # Build target
 all:
