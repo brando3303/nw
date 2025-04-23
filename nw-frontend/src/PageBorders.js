@@ -2,23 +2,37 @@ import React, { Component } from 'react';
 import { Link } from "react-router-dom";
 import styles from './Styles.module.css'
 import NSFlogo from './NSF-Logo.JPG';
+import { isMobile } from "react-device-detect";
 
 
 export class TitleBar extends Component {
+
+  renderMobileUpdate = () => {
+    if (!isMobile) {
+      return;
+    }
+    return <p>Mobile UI updates coming soon!</p>
+  }
+
   render = () => {
     return (
-      <div className={styles.navbar}>
-        <img src={NSFlogo} alt={"Logo"}/>
-        <Link to={"/home"} className={styles.navbar_item_back}>
-          <span className={styles.navbar_item}>Home</span>
-        </Link>
-        <Link to={"/home"} className={styles.navbar_item_back}>
-          <span className={styles.navbar_item}>About</span>
-        </Link>
-        <p className={styles.subtext}>College Football scouting reports by Nate Leland</p>
+      <div>
+        <div className={styles.navbar}>
+          <img src={NSFlogo} alt={"Logo"}/>
+          <Link to={"/home"} className={styles.navbar_item_back}>
+            <span className={styles.navbar_item}>Home</span>
+          </Link>
+          <Link to={"/home"} className={styles.navbar_item_back}>
+            <span className={styles.navbar_item}>About</span>
+          </Link>
+          <p className={styles.subtext}>College Football scouting reports by Nate Leland</p>
+        </div>
+        {this.renderMobileUpdate()}
       </div>
     )};
   }
+
+
   
   
   export class Footer extends Component {

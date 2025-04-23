@@ -42,7 +42,8 @@ export function PlayerPage (props) {
     }
 
     const doPlayerError = (msg) => {
-        console.error("error fetching player from server: " + msg)
+        console.error("error fetching player from server: " + msg);
+        setShow("error");
     }
 
 ///////////////////////////////////////////////////////////////////////////////
