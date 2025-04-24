@@ -12,6 +12,13 @@
     cursor: pointer;
     text-decoration: none;
   }
+
+  @media (max-width: 768px) {
+    .card {
+      width: 340px;
+      height: 300px;
+    }
+  }
   
   .card:hover {
     transform: translateY(-8px);

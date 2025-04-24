@@ -27,6 +27,13 @@
     border-bottom-color: rgb(202, 202, 202);
 }
 
+@media (max-width: 768px) {
+    .scouting_header {
+      padding: 12px;
+      font-size: 25px;
+    }
+  }
+
 .reports_cont {
     padding-top: 3%;
     display: flex;

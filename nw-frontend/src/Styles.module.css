@@ -74,6 +74,16 @@
   font-size:15pt;
 }
 
+.mobile_subtext {
+  font-family: "Roboto", sans-serif;
+  color:#7d7d7d;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* centers children horizontally */
+  align-items: center;
+  font-size:12pt;
+}
+
 .playerpage_loading {
   font-family: 'Playfair Display', serif;
   font-size: 1.5rem;
@@ -116,6 +126,12 @@
   display: flex;
   justify-content: center;
   align-items: flex-start; /* align content to top */
+}
+
+@media (max-width: 768px) {
+  .images {
+    height: 30vh;
+  }
 }
 
 .playerImg {

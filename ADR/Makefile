@@ -8,7 +8,7 @@ endif
 
 # Directory for build outputs. use win, macos, or linux.
 BUILD_DIR=builds
-DEVICE=macos
+DEVICE=win
 
 # Build target
 all:
@@ -27,3 +27,6 @@ all:
 
 	# Package into an executable inside builds/
 	npx pkg -t node20-$(DEVICE)-x64 $(BUILD_DIR)/update.js --output $(BUILD_DIR)/update-$(DEVICE)-x64
+
+	#allow mac exe to be executed
+	chmod +x $(BUILD_DIR)/update-$(DEVICE)-x64*
