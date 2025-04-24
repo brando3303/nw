@@ -45,7 +45,7 @@ class NotionHelper {
         let results = [];
         let start_cursor = undefined;
         for (let i = 0; has_more && i < num_pages; i++) {
-            console.log("new call, res len: " + results.length);
+            console.log("found " + results.length + " pages...");
             const response = await this.notion.search({
                 //query: '2025',
                 // filter: {
@@ -112,9 +112,9 @@ class NotionHelper {
                                 team_img: player.icon.file.url,
                                 date_edited: player.last_edited_time,
                             }
-                            if (this.getPageTitle(player) == "Cam Ward (85)") {
-                                console.log(JSON.stringify(player, null, 2));
-                            }
+                            // if (this.getPageTitle(player) == "Cam Ward (85)") {
+                            //     console.log(JSON.stringify(player, null, 2));
+                            // }
                             positionEntry.players.push(playerEntry);
                         }
 
@@ -191,13 +191,17 @@ class NotionHelper {
                     bulleted = false;
                     outHTML += "</ul>";
                 }
-                outHTML += "<p>" + this.getParagraph(block) + "</p>";
+                //console.log(this.getParagraph(block));
+                let para = this.getParagraph(block);
+                if (para !== String(undefined)){
+                    outHTML += "<p>" + this.getParagraph(block) + "</p>";
+                }
             } else if (block.type === "bulleted_list_item") {
                 if(!bulleted) {
                     bulleted = true;
                     outHTML += "<ul>";
                 }
-                if (block.bulleted_list_item.rich_text != null && block.bulleted_list_item.rich_text[0] != null && 
+                if (block.bulleted_list_item.rich_text != null && block.bulleted_list_item.rich_text[0] !== null && 
                     block.bulleted_list_item.rich_text[0].plain_text != null) {
                     outHTML += "<li>" + block.bulleted_list_item.rich_text[0].plain_text + "</li>";
                 }
@@ -209,11 +213,12 @@ class NotionHelper {
 
     // gets the text paragraph from a text block
     getParagraph = (block) => {
-        if (block.type !== "paragraph") return null;
-        if (block.paragraph.rich_text != null && block.paragraph.rich_text[0] != null && 
-            block.paragraph.rich_text[0].plain_text != null) {
-            return block.paragraph.rich_text[0].plain_text === undefined ? "" : block.paragraph.rich_text[0].plain_text;
+        if (block.type !== "paragraph") return "";
+        if (block.paragraph.rich_text !== undefined && block.paragraph.rich_text.length !== 0 && 
+            block.paragraph.rich_text[0].plain_text !== undefined) {
+            return block.paragraph.rich_text[0].plain_text === undefined ? " " : block.paragraph.rich_text[0].plain_text;
         }
+        return "";
     }
 
     // checks if the title has a score <name (score)>. if
