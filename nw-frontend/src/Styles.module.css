@@ -167,3 +167,33 @@
   padding: 0;
   
 }
+
+.search_container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search_suggestion {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  color: #aaa;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.search_input {
+  position: relative;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background-color: white;
+  z-index: 1;
+}

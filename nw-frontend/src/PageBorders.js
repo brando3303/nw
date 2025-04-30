@@ -1,27 +1,28 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Link } from "react-router-dom";
 import styles from './Styles.module.css'
 import NSFlogo from './NSF-Logo.JPG';
 import { isMobile } from "react-device-detect";
 
 
-export class TitleBar extends Component {
+export function TitleBar (props) {
+
   
-  renderMobile = (element) => {
+  const renderMobile = (element) => {
     if (!isMobile) {
       return;
     }
     return element;
   }
 
-  renderNotMobile = (element) => {
+  const renderNotMobile = (element) => {
     if (isMobile) {
       return;
     }
     return element;
   }
   
-  render = () => {
+  const render = () => {
     return (
       <div>
       <div className={styles.navbar}>
@@ -32,13 +33,16 @@ export class TitleBar extends Component {
       <Link to={"/home"} className={styles.navbar_item_back}>
       <span className={styles.navbar_item}>About</span>
       </Link>
-      {this.renderNotMobile(<p className={styles.subtext}>College Football scouting reports by Nate Leland</p>)}
+      <SearchBar/>
+      {renderNotMobile(<p className={styles.subtext}>College Football scouting reports by Nate Leland</p>)}
       </div>
-      {this.renderMobile(<p className={styles.mobile_subtext}>College Football scouting reports by Nate Leland</p>)}
-      {this.renderMobile(<p className={styles.mobile_subtext}>Mobile Updates Coming Soon!</p>)}
+      {renderMobile(<p className={styles.mobile_subtext}>College Football scouting reports by Nate Leland</p>)}
+      {renderMobile(<p className={styles.mobile_subtext}>Mobile Updates Coming Soon!</p>)}
       </div>
     )
   };
+
+  return render();
 }
   
   
@@ -60,4 +64,32 @@ export class TitleBar extends Component {
         </footer>
       );
     }
+  }
+
+  function SearchBar() {
+    const [input, setInput] = useState('');
+  
+    const handleChange = (e) => {
+      const value = e.target.value;
+      setInput(value);
+      //onInput(value);
+    };
+
+
+    return (
+      <div className={styles.search_container}>
+        <input
+          type="text"
+          value={input || ''}
+          disabled
+          className={styles.search_suggestion}
+        />
+        <input
+          type="text"
+          value={input}
+          onChange={handleChange}
+          className={styles.search_input}
+        />
+      </div>
+    );
   }
