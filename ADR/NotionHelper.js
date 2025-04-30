@@ -6,8 +6,9 @@ player := {
     name,
     position,
     score,
-    playerpage,
+    playerpage,  // html
     playerpage_prev,
+    playerpage_text,  // raw string
     date_edited,
     player_img,
     team_img
@@ -15,7 +16,7 @@ player := {
 */
 
 /* usage: create a new NotionHelper, call getData, and then
- * processData to get the complete player data for 
+ * processDataToHTML to get the complete player data for 
  * placing into the database
  */
 class NotionHelper {
@@ -34,7 +35,11 @@ class NotionHelper {
     }
 
     // processes the data into a Player list and returns it. 
-    processData = async () => {
+    processDataToHTML = async () => {
+        if (this.data == null) {
+            console.error("unable to process data. run getData first");
+            return null;
+        }
         console.log(this.data)
         return await this.positionListToPlayerList(this.data.positions);
     }
@@ -146,15 +151,13 @@ class NotionHelper {
         return page.properties.title.title[0].text.content;
     }
 
+    // returns a list of type player
     positionListToPlayerList = async (positions) => {
         const list = [];
         for (let pos of positions) {
             for (let player of pos.players) {
-                if (player.name == null || pos.positionName == null ||player.pageId == null) {
-                    console.log(player.name + pos.positionName + playerPageToHTML(player.pageId));
-                }
                 if (typeof player.name ==='string' && typeof pos.positionName === 'string'){
-                    const playerpage = await this.playerPageToHTML(player.pageId)
+                    const [playerpage, playerpageText] = await this.playerPageToHTML(player.pageId)
                     list.push({
                         name: player.name,
                         position: pos.positionName,
@@ -164,6 +167,7 @@ class NotionHelper {
                         date_edited: player.date_edited,
                         playerpage: playerpage,
                         playerpage_prev: playerpage.slice(0, 100) + "...",
+                        playerpage_text: playerpageText,
                     });
                 }
             }
@@ -174,7 +178,7 @@ class NotionHelper {
     // creates an HTML page from the contents of the page pageId refers to.
     // currently limited to 100 blocks. supports paragraphs and bullet lists.
     // returns null if error occurs (silently haha). returns a string containing
-    // HTML
+    // HTML and a string of just the raw text of the page.
     playerPageToHTML = async (pageId) => {
         // get notion page connected to player
         const page = await this.notion.blocks.children.list({
@@ -184,6 +188,7 @@ class NotionHelper {
         //console.log(JSON.stringify(page, null, 2));
         // iterate through player page and compile blocks into HTML
         let outHTML = "<div>";
+        let outText  = "";
         let bulleted = false;
         for (let block of page.results) {
             if (block.type === "paragraph") {
@@ -194,7 +199,8 @@ class NotionHelper {
                 //console.log(this.getParagraph(block));
                 let para = this.getParagraph(block);
                 if (para !== String(undefined)){
-                    outHTML += "<p>" + this.getParagraph(block) + "</p>";
+                    outHTML += "<p>" + para + "</p>";
+                    outText += " " + para;
                 }
             } else if (block.type === "bulleted_list_item") {
                 if(!bulleted) {
@@ -204,11 +210,12 @@ class NotionHelper {
                 if (block.bulleted_list_item.rich_text != null && block.bulleted_list_item.rich_text[0] !== null && 
                     block.bulleted_list_item.rich_text[0].plain_text != null) {
                     outHTML += "<li>" + block.bulleted_list_item.rich_text[0].plain_text + "</li>";
+                    outText += " " + block.bulleted_list_item.rich_text[0].plain_text;
                 }
             }
         }
         outHTML += "</div>"
-        return outHTML;
+        return [outHTML, outText];
     }
 
     // gets the text paragraph from a text block
