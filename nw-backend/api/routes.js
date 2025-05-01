@@ -49,7 +49,10 @@ const searchPages = async (req, res) => {
         return;
     }
 
-    const ret = {players: players, closestWord: wordIndex.slice(0,30)};
+    nearestWords = results.map((el) => {
+        return el.word;
+    }).slice(0, 30);
+    const ret = {players: players, closestWord: nearestWords};
     res.status(200).send(JSON.stringify(ret));
     return;
 }

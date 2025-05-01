@@ -70,12 +70,19 @@ export function TitleBar (props) {
   function SearchBar() {
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState('');
+    const [sugList, setSugList] = useState([]);
     let seqNum = 0;
 
   
     const handleChange = (e) => {
       const value = e.target.value;
       setInput(value);
+      if (sugList.length > 0) {
+        let suggestion = sugList.filter((sug) => {return sug.startsWith(value.toLowerCase())});
+        if (suggestion.length > 0) {
+          setSuggestions(suggestion[0]);
+        }
+      }
       onInput(value);
     };
 
@@ -101,7 +108,8 @@ export function TitleBar (props) {
     }
 
     const doSearchJson = (data) => {
-      setSuggestions(data.closestWord);
+      setSuggestions(data.closestWord[0]);
+      setSugList(data.closestWord);
       console.log("search response: " + data.closestWord);
     }
 
