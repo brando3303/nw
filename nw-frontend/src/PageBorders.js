@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from './Styles.module.css'
 import NSFlogo from './NSF-Logo.JPG';
 import { isMobile } from "react-device-detect";
+import { API_URL } from './NSF';
 
 
 export function TitleBar (props) {
@@ -68,28 +69,64 @@ export function TitleBar (props) {
 
   function SearchBar() {
     const [input, setInput] = useState('');
+    const [suggestions, setSuggestions] = useState('');
+    let seqNum = 0;
+
   
     const handleChange = (e) => {
       const value = e.target.value;
       setInput(value);
-      //onInput(value);
+      onInput(value);
     };
 
+    const onInput = (value) => {
+      seqNum++;
+      fetch(API_URL + '/search?search=' + value)
+        .then(res => {doSearchResp(res, seqNum)})
+        .catch(doSearchError);
+    }
 
-    return (
-      <div className={styles.search_container}>
-        <input
-          type="text"
-          value={input || ''}
-          disabled
-          className={styles.search_suggestion}
-        />
-        <input
-          type="text"
-          value={input}
-          onChange={handleChange}
-          className={styles.search_input}
-        />
-      </div>
-    );
+    const doSearchResp = (res, sn) => {
+      if (res.status !== 200) {
+        res.text()
+           .then((msg) => doSearchError(`bad status code ${res.status}: ${msg}`))
+           .catch(() => doSearchError("Failed to parse error response message"));
+        return;
+      } else if (sn < seqNum) {  // old response
+        return;
+      }
+      res.json()
+         .then(doSearchJson)
+         .catch(doSearchError);
+    }
+
+    const doSearchJson = (data) => {
+      setSuggestions(data.closestWord);
+      console.log("search response: " + data.closestWord);
+    }
+
+    const doSearchError = (msg) => {
+      console.error("error fetching from server: " + msg);
+    }
+
+    const render = () => {
+      return (
+        <div className={styles.search_container}>
+          <input
+            type="text"
+            value={suggestions || input}
+            disabled
+            className={styles.search_suggestion}
+          />
+          <input
+            type="text"
+            value={input}
+            onChange={handleChange}
+            className={styles.search_input}
+          />
+        </div>
+      );
+    }
+
+    return render();
   }

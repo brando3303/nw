@@ -172,28 +172,38 @@
   position: relative;
   width: 100%;
   max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: white;
+  padding: 10px 14px;
+  box-sizing: border-box;
 }
 
 .search_suggestion {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 10px 14px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  background-color: transparent;
-  color: #aaa;
+  top: 10px; /* Matches container padding */
+  left: 14px; /* Matches container padding */
+  width: calc(100% - 28px); /* Adjust for horizontal padding */
+  color: #ccc; /* Light grey suggestion text */
   pointer-events: none;
   z-index: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: none;
+  outline: none;
+  background: transparent; /* Transparent background */
+  font: inherit;
+  
 }
 
 .search_input {
   position: relative;
   width: 100%;
-  padding: 10px 14px;
-  border-radius: 20px;
-  border: 1px solid #ccc;
-  background-color: white;
-  z-index: 1;
+  border: none;
+  outline: none;
+  background: transparent; /* Transparent background */
+  color: black; /* Input text color */
+  font: inherit;
+  z-index: 1; /* Above the suggestion text */
 }
