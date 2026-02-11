@@ -19,11 +19,11 @@ function useQuery() {
 }
 
 // this Component Class contains all global data for the app. we route between paths with react-router-dom.
-// the only globle data is cached player data for the home page. we don't cache player pages, it doesn't break up flow and 
-// adds globle data complexity. data is a map from name to player data.
+// the only global data is cached player data for the home page. we don't cache player pages, it doesn't break up flow and 
+// adds global data complexity. data is a map from name to player data.
 export function NSFApp () {
-    let [roster, setRoster] = useState(null);
-    let query = useQuery();
+    const [roster, setRoster] = useState(null);
+    const query = useQuery();
 
     const render = () => {
         return (
