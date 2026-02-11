@@ -1,6 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useRef } from 'react';
 import { Link } from "react-router-dom";
 import styles from './Styles.module.css'
+import searchStyles from './SearchDropdownStyles.module.css'
 import NSFlogo from './NSF-Logo.JPG';
 import { isMobile } from "react-device-detect";
 import { API_URL } from './NSF';
@@ -68,28 +69,40 @@ export function TitleBar (props) {
   }
 
   function SearchBar() {
-    const [input, setInput] = useState('');
-    const [suggestions, setSuggestions] = useState('');
-    const [sugList, setSugList] = useState([]);
-    let seqNum = 0;
-
+    const [input, setInput] = useState('');  // the state of the input field
+    const [sugList, setSugList] = useState([]);  // the list of cached suggestions
+    const [suggestion, setSuggestion] = useState('');  // the current suggestion to display
+    const [results, setResults] = useState([]);  // the list of results to display
+    const [isActive, setIsActive] = useState(false);  // whether the input field is active or not
+    const seqNum = useRef(0);  // sequence number to 
   
     const handleChange = (e) => {
-      const value = e.target.value;
-      setInput(value);
-      if (sugList.length > 0) {
-        let suggestion = sugList.filter((sug) => {return sug.startsWith(value.toLowerCase())});
-        if (suggestion.length > 0) {
-          setSuggestions(suggestion[0]);
+      const [prev, lastToken] = breakInput(e.target.value);
+
+      setInput(e.target.value);
+      seqNum.current++;
+      if (lastToken.length === 0) {
+        if (!prev.endsWith(' ')) { 
+          setResults([]);
+        }
+        setSuggestion(prev);
+        return;
+      }
+      
+      if (sugList.length > 0) {  // if there are any cached suggestions
+        let suggestion = sugList.filter((sug) => {return sug.startsWith(lastToken.toLowerCase())});
+        if (suggestion.length > 0) {  // if there is a matching cached word, use it as the suggestion
+          setSuggestion(prev + suggestion[0]);
+        } else {
+          setSuggestion(e.target.value);  // no matching cached word, so just use the input value
         }
       }
-      onInput(value);
+      querySearch(lastToken.toLowerCase(), seqNum.current);
     };
 
-    const onInput = (value) => {
-      seqNum++;
+    const querySearch = (value, sn) => {
       fetch(API_URL + '/search?search=' + value)
-        .then(res => {doSearchResp(res, seqNum)})
+        .then(res => {doSearchResp(res, sn)})
         .catch(doSearchError);
     }
 
@@ -99,42 +112,91 @@ export function TitleBar (props) {
            .then((msg) => doSearchError(`bad status code ${res.status}: ${msg}`))
            .catch(() => doSearchError("Failed to parse error response message"));
         return;
-      } else if (sn < seqNum) {  // old response
+      } else if (sn !== seqNum.current) {
         return;
       }
       res.json()
-         .then(doSearchJson)
+         .then(e => doSearchJson(e, sn))
          .catch(doSearchError);
     }
 
-    const doSearchJson = (data) => {
-      setSuggestions(data.closestWord[0]);
+    const doSearchJson = (data, sn) => {
+      if (sn !== seqNum.current) {  // if the response is not the latest one, ignore it
+        return;
+      }
+      const [prevWords, lastToken] = breakInput(input);
+      if (!Array.isArray(data.closestWord) || data.closestWord.length === 0) {  // no suggestions, so just use the input value
+        setSuggestion(prevWords + lastToken);
+        setResults([]);
+        return;
+      }
+      setSuggestion(prevWords + data.closestWord[0]);
       setSugList(data.closestWord);
-      console.log("search response: " + data.closestWord);
+      setResults(data.players || []);
+      console.log("this sn == " + sn + ", search response: " + data.closestWord);
     }
 
     const doSearchError = (msg) => {
       console.error("error fetching from server: " + msg);
     }
 
+    // breaks the value variable into part of text that is not being suggested and part that is.
+    // For example, "I want to know the cap" would be broken into "I want to know the " and "cap".
+    // " the top of t " => " the top of t " and "" (notice that spaces at the end mean there doesnt need to be a suggestion)
+    // " the top of t" => " the top of " and "t"
+    const breakInput = (value) => {
+      const len = value.length;
+      if (len === 0 || value.endsWith(' ')) {
+        return [value, ""];
+      }
+
+      const queryTokens = value.split(/\s+/);
+      const lastToken = queryTokens[queryTokens.length - 1];
+      const lastTokenLen = lastToken.length;
+      const prevString = value.slice(0, len - lastTokenLen);
+      return [prevString, lastToken];
+    }
+
+
     const render = () => {
       return (
-        <div className={styles.search_container}>
-          <input
-            type="text"
-            value={suggestions || input}
-            disabled
-            className={styles.search_suggestion}
-          />
-          <input
-            type="text"
-            value={input}
-            onChange={handleChange}
-            className={styles.search_input}
-          />
-        </div>
+        <div className={searchStyles.anchor}>
+          <div className={searchStyles.container}>
+          <div className={searchStyles.search_container}>
+            <input
+              type="text"
+              value={suggestion}
+              disabled
+              className={searchStyles.search_suggestion}
+            />
+            <input
+              type="text"
+              value={input}
+              onChange={handleChange}
+              className={searchStyles.search_input}
+
+            />
+          </div>
+          {results.length > 0 && (
+            <div className={searchStyles.dropdown}>
+                {results.map((item, index) => (
+                  <SearchItem key={index} id={item.index} name={item.name} />
+                ))}
+            </div>
+          )}
+          </div>
+    </div>
       );
     }
+
+    function SearchItem(props) {
+      return (
+        <a href={"/player?id=" + props.id} className={searchStyles.item}>
+            {props.name}
+        </a>
+      );
+    }
+
 
     return render();
   }

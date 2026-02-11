@@ -19,6 +19,7 @@ const program = async () => {
     await nh.getData(notion_page);
     console.log("Finished retreiving pages, processing data");
     data = await nh.processDataToHTML();
+    data.foreach((player, i) => {player.id = i});  // add an id to each player
     console.log("Processing complete. sending to database");
 
     sql = postgres(database_key);
@@ -45,10 +46,12 @@ const program = async () => {
     // remove the playerpage_text field from data since the database does not store it
     data.foreach(player => {delete player.playerpage_text});
 
+
     await sql`INSERT INTO players ${sql(data)}`;
 
     console.log("Data sent.");
-}
+
+    }
 
     // next we generate the trie and inverted index over all documents
     console.log("Generating trie and inverted index...");
