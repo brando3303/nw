@@ -9,7 +9,6 @@ import {
 } from "react-router-dom";
 import { API_URL } from './NSF';
 import PlayerCard from './PlayerCard';
-import styles from './HomeStyles.module.css'
 
 // class component for the home page of the site. facillitates retreiving the globa; data from the server api, sets the data of the parent.
 // requires a setData prop and globalData prop. setData is a function which sets global data of the parent.
@@ -45,40 +44,16 @@ export function Home(props) {
     fetch(API_URL + '/playerRoster')
       .then(doListResp)
       .catch(doListError);
-    return (<div className={styles.homepage_loading}>
+    return (<div className="font-['Playfair_Display',serif] text-[1.5rem] text-[#333] flex justify-center items-center h-[90vh]">
                 <p>Loading...</p>
                 </div>)
   }
 
   const renderHome = () => (
-    <div className={styles.main_cont}>
-      <div className={styles.scouting_header}>Player Evaluations</div>
-      <div className={styles.reports_cont}>
+    <div className="p-0 mb-[30px]">
+      <div className="pt-[3%] flex flex-row flex-wrap gap-4 justify-center items-center">
         {roster.map((player, index) => (
-          // <div
-          //   key={index}
-          //   style={{
-          //     border: '1px solid #ccc',
-          //     padding: '1rem',
-          //     borderRadius: '8px',
-          //     cursor: 'pointer',
-          //     backgroundColor: '#f9f9f9',
-          //   }}
-          //   onClick={() => onPlayerClick(player)}
-          // >
-          //   <h3>{player.name}</h3>
-          //   <p>Position: {player.position}</p>
-          //   <button
-          //     to={"/player?name=" + player.name}
-          //     onClick={(e) => {
-          //       e.stopPropagation(); // Prevents the card's onClick from firing
-          //       onPlayerClick(player);
-          //     }}
-          //   >
-          //     View Player
-          //   </button>
-          // </div>
-          <PlayerCard player={player}/>
+          <PlayerCard player={player} key={index}/>
         ))}
       </div>
     </div>
