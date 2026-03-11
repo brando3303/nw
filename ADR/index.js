@@ -14,13 +14,13 @@ const notion_page = process.env.NOTION_PAGE_ID_SCOUNTING;
 const program = async () => {
     console.log("NSF-NATELELAND.com data retreival. Copyright (c) Brandon C Bailey.")
     console.log("Retreiving notion pages...")
-    nh = new NotionHelper(notion_key);
-    await nh.getData(notion_page);
+    const nh = new NotionHelper(notion_key);
+    await nh.getData(["2025", "2026"]);
     console.log("Finished retreiving pages, processing data");
-    data = await nh.processData();
+    const data = await nh.processDataToHTML();
     console.log("Processing complete. sending to database");
-
-    sql = postgres(database_key);
+    console.log(JSON.stringify(data, null, 2))
+    const sql = postgres(database_key);
     await sql`DROP TABLE IF EXISTS players`
 
     await sql`CREATE TABLE players (
