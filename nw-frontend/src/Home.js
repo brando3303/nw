@@ -116,12 +116,8 @@ export function Home(props) {
     if (!Array.isArray(data)) {
       doListError();
     } else {
-      if (roster == null && show != "Home") {
-        props.setRoster(data);
-        console.log("setting roster: " + JSON.stringify(data));
-        setRoster(data);
-        setShow("Home");
-      }
+      console.log("setting roster: " + JSON.stringify(data));
+      props.setRoster(data);
     }
   }
   const doListError = (msg) => {
