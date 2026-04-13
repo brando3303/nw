@@ -180,7 +180,7 @@ class NotionHelper {
                         date_edited: player.date_edited,
                         playerpage: playerpage,
                         playerpage_prev: playerpage.slice(0, 100) + "...",
-                        playerpage_text: playerpageText,
+                        //playerpage_text: playerpageText,
                     });
                 }
             }

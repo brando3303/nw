@@ -1,31 +1,36 @@
-import ReactDOM from 'react-dom/client';
-import React, { ChangeEvent, Component, MouseEvent, useState, useEffect, Error } from 'react';
-import {
-    BrowserRouter,
-    Routes,
-    Route,
-    Link,
-    getNavigation,
-    useLocation,
-    useParams
-} from "react-router-dom";
-import { API_URL } from './NSF';
-
-//        <img src={player.team_img} alt="Team Logo" className={styles.teamImg} />
-// for when the logos are working
+import React from 'react';
 
 const PlayerCard = ({ player }) => {
   return (
-    <a className="bg-white border border-black/5 w-[340px] flex flex-col items-center p-0 rounded-2xl overflow-hidden transition-all duration-300 ease-out cursor-pointer no-underline shadow-sm hover:-translate-y-2 hover:shadow-[0_12px_28px_rgba(0,0,0,0.12)] max-md:w-[360px] max-md:h-[360px]" href={'/player?id=' + player.id}>
-      <div className="relative w-full h-[200px] overflow-hidden flex justify-center items-start">
-        <img src={player.player_img} alt={player.name} className="w-full h-full object-cover object-top" />
-        <div className="absolute top-3 right-3 h-12 w-12 rounded-full text-red-500 bg-white/90 text-[#1f2937] flex items-center justify-center text-[1.1rem] font-bold shadow-md">
+    <a
+      className="group relative w-[292px] overflow-hidden rounded-2xl border border-slate-200/90 bg-white no-underline shadow-[0_5px_18px_rgba(15,23,42,0.07)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-red-200/70 hover:shadow-[0_10px_24px_rgba(15,23,42,0.11)]"
+      href={'/player?id=' + player.id}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-red-50/0 via-red-100/0 to-orange-100/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+      <div className="relative h-[158px] w-full overflow-hidden">
+        <img
+          src={player.player_img}
+          alt={player.name}
+          className="h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+        />
+        <div className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/80 bg-white/80 text-[0.95rem] font-semibold text-slate-800 shadow-sm">
           {player.score}
         </div>
       </div>
-      <div className="w-full px-4 pb-4 text-left text-[#333] no-underline">
-        <h2 className="text-[1.6rem] font-semibold mt-3 mb-1 text-[#111] no-underline font-sans">{player.name}</h2>
-        <p className="text-[0.95rem] text-[#64748b] mb-1">{player.position}</p>
+
+      <div className="relative w-full px-4 pb-4 pt-3 text-left text-slate-700">
+        <h2 className="line-clamp-1 text-[1.25rem] font-semibold text-slate-900 font-sans">
+          {player.name}
+        </h2>
+        <div className="mt-2 flex items-center justify-between">
+          <p className="rounded-md bg-slate-100 px-2 py-1 text-[0.78rem] uppercase tracking-wide text-slate-600">
+            {player.position}
+          </p>
+          {player.year && (
+            <p className="text-[0.78rem] font-medium text-slate-500">{player.year}</p>
+          )}
+        </div>
       </div>
     </a>
   );

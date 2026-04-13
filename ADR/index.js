@@ -21,21 +21,21 @@ const program = async () => {
     console.log("Processing complete. sending to database");
     console.log(JSON.stringify(data, null, 2))
     const sql = postgres(database_key);
-    await sql`DROP TABLE IF EXISTS players`
+    // await sql`DROP TABLE IF EXISTS players`
 
-    await sql`CREATE TABLE players (
-        id SERIAL PRIMARY KEY,
-        name Text,  
-        position Text,
-        score Int,
-        playerpage Text,
-        playerpage_prev Text,
-        date_edited Date,
-        player_img Text,
-        team_img Text
-    )`;
-    console.log("Created table. sending data");
-
+    // await sql`CREATE TABLE players (
+    //     id SERIAL PRIMARY KEY,
+    //     name Text,  
+    //     position Text,
+    //     score Int,
+    //     playerpage Text,
+    //     playerpage_prev Text,
+    //     date_edited Date,
+    //     player_img Text,
+    //     team_img Text
+    // )`;
+    // console.log("Created table. sending data");
+    await sql`DELETE FROM players`;
     await sql`INSERT INTO players ${sql(data)}`;
 
     console.log("Data sent.");
