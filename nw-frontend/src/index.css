@@ -15,3 +15,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@keyframes playerCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.player-card-fade-in {
+  opacity: 0;
+  animation: playerCardFadeIn 420ms ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player-card-fade-in {
+    animation: none;
+    opacity: 1;
+  }
+}

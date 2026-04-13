@@ -118,13 +118,14 @@ class NotionHelper {
                             if (!player.cover.external) {
                                 console.log(player)
                             }
+                            console.log(JSON.stringify(player, null, 2));
                             let playerEntry = 
                             {
                                 name: s[0],
                                 score: s[1],
                                 pageId: player.id,
                                 parentPageId: player.parent.page_id,
-                                player_img: player.cover.external ?  player.cover.external.url : null,
+                                player_img: player.cover.external ?  player.cover.external.url : player.cover.file ? player.cover.file.url : null,
                                 team_img: player.icon.file.url,
                                 date_edited: player.last_edited_time,
                                 year: year,

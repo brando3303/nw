@@ -1,9 +1,10 @@
 import React from 'react';
 
-const PlayerCard = ({ player }) => {
+const PlayerCard = ({ player, className = '', style }) => {
   return (
     <a
-      className="group relative w-[292px] overflow-hidden rounded-2xl border border-slate-200/90 bg-white no-underline shadow-[0_5px_18px_rgba(15,23,42,0.07)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-red-200/70 hover:shadow-[0_10px_24px_rgba(15,23,42,0.11)]"
+      className={`group relative w-[292px] overflow-hidden rounded-2xl border border-slate-200/90 bg-white no-underline shadow-[0_5px_18px_rgba(15,23,42,0.07)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-red-200/70 hover:shadow-[0_10px_24px_rgba(15,23,42,0.11)] ${className}`.trim()}
+      style={style}
       href={'/player?id=' + player.id}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-red-50/0 via-red-100/0 to-orange-100/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />

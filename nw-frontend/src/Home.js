@@ -77,7 +77,12 @@ export function Home(props) {
       </div> */}
       <div className="pt-[1%] flex flex-row flex-wrap gap-4 justify-center items-center">
         {filteredRoster.map((player, index) => (
-          <PlayerCard player={player} key={index}/>
+          <PlayerCard
+            player={player}
+            className="player-card-fade-in"
+            style={{ animationDelay: `${Math.min(index * 60, 900)}ms` }}
+            key={index}
+          />
         ))}
       </div>
       {filteredRoster.length === 0 && (

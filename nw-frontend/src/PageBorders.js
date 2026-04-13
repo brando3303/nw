@@ -55,7 +55,7 @@ export class TitleBar extends Component {
                 <p className="text-[1.45rem] font-semibold tracking-[0.2px] text-slate-900 leading-tight">
                   Next Star Football
                 </p>
-                <p className="text-[0.9rem] leading-tight bg-gradient-to-r from-red-700 via-red-500 to-orange-400 text-transparent bg-clip-text">
+                <p className="text-[0.9rem] leading-tight bg-gradient-to-b from-[#e00000] to-[#361818] text-transparent bg-clip-text">
                   College Football Scouting Reports by Nate Leland
                 </p>
               </div>
