@@ -2,6 +2,8 @@ import {
     Routes,
     Route,
     useLocation,
+    useParams,
+    Navigate,
   } from "react-router-dom";
 import React, { useState } from 'react';
 import { Home } from './Home';
@@ -10,12 +12,25 @@ import { TitleBar, Footer } from './PageBorders'
 import { Analytics } from '@vercel/analytics/react';
 
 export const API_URL = "https://nw-api.vercel.app";
+const SUPPORTED_YEARS = ["all", "2025", "2026"];
 
 // hook for getting query params
 function useQuery() {
     const { search } = useLocation();
   
     return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
+// Defined outside NSFApp so it has a stable function reference across re-renders.
+// If defined inside, every NSFApp re-render produces a new component type, causing
+// React to unmount/remount Home and restart card animations.
+function HomeRoute({ roster, setRoster }) {
+    const { year } = useParams();
+    const selectedYear = (year || "all").toLowerCase();
+    if (!SUPPORTED_YEARS.includes(selectedYear)) {
+        return <Navigate to="/home/all" replace />;
+    }
+    return <Home setRoster={setRoster} roster={roster} selectedYear={selectedYear} />;
 }
 
 // this Component Class contains all global data for the app. we route between paths with react-router-dom.
@@ -31,14 +46,13 @@ export function NSFApp () {
                 <Analytics/>
                 <TitleBar/>
                 <Routes>
-                    <Route path="/" element={<Home setRoster={setRoster} roster={roster}/>}/>
-                    <Route path="/home" element={<Home setRoster={setRoster} roster={roster}/>}/>
+                    <Route path="/" element={<Navigate to="/home/all" replace />}/>
+                    <Route path="/home" element={<Navigate to="/home/all" replace />}/>
+                    <Route path="/home/:year" element={<HomeRoute roster={roster} setRoster={setRoster} />}/>
                     <Route path="/player" element={<PlayerPage id={query.get("id")} />}/>
                 </Routes>
                 <Footer/>
             </div>
-
-
         )
     }
 

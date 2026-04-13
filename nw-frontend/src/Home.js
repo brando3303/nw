@@ -1,12 +1,4 @@
-import React, { ChangeEvent, Component, MouseEvent, useState, useEffect } from 'react';
-import ReactDOM from 'react-dom/client';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useNavigate
-} from "react-router-dom";
+import React, { useState, useEffect } from 'react';
 import { API_URL } from './NSF';
 import PlayerCard from './PlayerCard';
 
@@ -14,25 +6,56 @@ import PlayerCard from './PlayerCard';
 // requires a setData prop and globalData prop. setData is a function which sets global data of the parent.
 // globalData is the data given from the parent, if any.
 export function Home(props) {
-  let [show, setShow] = useState("LoadHome");
-  let [roster, setRoster] = useState(props.roster)
-  let navigate = useNavigate();
+  const [show, setShow] = useState("LoadHome");
+  const [roster, setRoster] = useState(props.roster);
+  const selectedYear = props.selectedYear || "all";
 
   useEffect(() => {
     if (props.roster != null) {
-      console.log("rostrer not null")
       setRoster(props.roster);
+      setShow("Home");
     }
-  }, [])
+  }, [props.roster]);
 
+  useEffect(() => {
+    if (roster != null) {
+      return;
+    }
+    fetch(API_URL + '/playerRoster')
+      .then(doListResp)
+      .catch(doListError);
+  }, [roster]);
+
+  const getFilteredRoster = () => {
+    if (!Array.isArray(roster)) {
+      return [];
+    }
+    const filteredRoster = selectedYear === "all"
+      ? roster
+      : roster.filter((player) => player.year === selectedYear);
+
+    return [...filteredRoster].sort((a, b) => {
+      const yearA = Number.parseInt(a?.year, 10) || 0;
+      const yearB = Number.parseInt(b?.year, 10) || 0;
+
+      if (yearA !== yearB) {
+        return yearB - yearA;
+      }
+
+      const nameA = (a?.name || "").trim();
+      const nameB = (b?.name || "").trim();
+      return nameA.localeCompare(nameB, undefined, { sensitivity: "base" });
+    });
+  };
 
   const render = () => {
     if (show === "LoadHome") {
-      return renderLoadHome();;
+      return renderLoadHome();
     } else if (show === "Home") {
       return renderHome();
     }
     console.error("invalid state");
+    return null;
   }
 
   const renderLoadHome = () => {
@@ -40,40 +63,36 @@ export function Home(props) {
       setShow("Home");
       return;
     }
-    console.log("loading");
-    fetch(API_URL + '/playerRoster')
-      .then(doListResp)
-      .catch(doListError);
     return (<div className="font-['Playfair_Display',serif] text-[1.5rem] text-[#333] flex justify-center items-center h-[90vh]">
                 <p>Loading...</p>
                 </div>)
   }
 
-  const renderHome = () => (
+  const renderHome = () => {
+    const filteredRoster = getFilteredRoster();
+    return (
     <div className="p-0 mb-[30px]">
-      <div className="pt-[3%] flex flex-row flex-wrap gap-4 justify-center items-center">
-        {roster.map((player, index) => (
-          <PlayerCard player={player} key={index}/>
+      {/* <div className="pt-4 pb-2 text-center text-slate-600 font-['Playfair_Display',serif] text-lg">
+        {selectedYear === "all" ? "All Years" : selectedYear}
+      </div> */}
+      <div className="pt-[1%] flex flex-row flex-wrap gap-4 justify-center items-center">
+        {filteredRoster.map((player, index) => (
+          <PlayerCard
+            player={player}
+            className="player-card-fade-in"
+            style={{ animationDelay: `${Math.min(index * 60, 900)}ms` }}
+            key={index}
+          />
         ))}
       </div>
+      {filteredRoster.length === 0 && (
+        <div className="font-['Playfair_Display',serif] text-[1.2rem] text-slate-500 flex justify-center items-center pt-10">
+          No players found for this year.
+        </div>
+      )}
     </div>
-  );
-
-///////////////////////////////////////////////////////////////////////////////
-// Event Handlers
-///////////////////////////////////////////////////////////////////////////////
-
-  // note that player is the entire player object, includes everything from getRoster.
-  // TODO: switch to Link component
-  const onPlayerClick = (player) => {
-    console.log("onPlayerClick")
-    // const navigate = useNavigate();
-    navigate("/player?id=" + player.id); 
-    // fetch(API_URL + '/player?name=' + player.name)
-    //   .then(this.doPlayerResp)
-    //   .catch(this.doPlayerError);
-    // TODO: nav (Link) to player page
-  }
+    );
+  };
 
 ///////////////////////////////////////////////////////////////////////////////
 // Server Call Handlers
@@ -87,7 +106,6 @@ export function Home(props) {
          .then((msg) => doListError(`bad status code ${res.status}: ${msg}`))
          .catch(() => doListError("Failed to parse error response message"));
     } else {
-      console.log("res code = 200");
       res.json()
         .then(doListJson)
         .catch(() => doListError("Failed to parse response data as JSON"))
@@ -95,16 +113,11 @@ export function Home(props) {
   }
 
   const doListJson = (data) => {
-    console.log("reached")
     if (!Array.isArray(data)) {
       doListError();
     } else {
-      if (roster == null && show != "Home") {
-        console.log("setting state")
-        props.setRoster(data);
-        setRoster(data);
-        setShow("Home");
-      }
+      console.log("setting roster: " + JSON.stringify(data));
+      props.setRoster(data);
     }
   }
   const doListError = (msg) => {

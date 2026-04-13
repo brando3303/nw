@@ -1,15 +1,27 @@
 import React, { Component } from 'react';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import NSFlogo from './NSF-Logo.JPG';
 import { isMobile } from "react-device-detect";
 
-const navItemClassName = "text-slate-600 px-4 py-2 no-underline text-xl m-2 font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif] h-full flex items-center rounded-lg transition-all duration-200 ease-out hover:text-slate-900 hover:bg-red-300/10 hover:shadow-md hover:-translate-y-0.5";
+const yearTabClassName = "px-5 py-2.5 rounded-lg text-[0.96rem] no-underline transition-all duration-200 font-['Segoe_UI',Tahoma,Geneva,Verdana,sans-serif]";
+const YEAR_TABS = ["all", "2025", "2026"];
 
-const NavItem = ({ to, children }) => (
-  <Link to={to} className="h-full flex p-1 items-center no-underline">
-    <span className={navItemClassName}>{children}</span>
-  </Link>
-);
+const YearTab = ({ year }) => {
+  const label = year === "all" ? "All" : year;
+  return (
+    <NavLink
+      to={`/home/${year}`}
+      className={({ isActive }) =>
+        `${yearTabClassName} ${isActive
+          ? "bg-white text-slate-900 shadow-[0_6px_14px_rgba(15,23,42,0.12)]"
+          : "text-slate-600 hover:text-slate-900 hover:bg-white/75"
+        }`
+      }
+    >
+      {label}
+    </NavLink>
+  );
+};
 
 
 export class TitleBar extends Component {
@@ -30,21 +42,38 @@ export class TitleBar extends Component {
 
   render = () => {
     return (
-      <div>
-        <div className="flex items-center h-[90px] bg-[#FAFAFA] top-0 w-full px-4">
-          <img src={NSFlogo} alt={"Logo"} className="border-2 border-black/25 h-20 w-20 rounded-xl p-0 bg-white shadow-sm mr-4" />
-          {!isMobile &&
-            (
-              <p className="flex items-center text-2xl bg-gradient-to-r from-red-700 via-red-500 to-red-400 text-transparent bg-clip-text ml-3">
-                College Football Scouting Reports by Nate Leland
-              </p>
+      <div className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/85 backdrop-blur-md shadow-[0_10px_30px_rgba(15,23,42,0.07)]">
+        <div className="mx-auto flex h-[104px] w-full max-w-[1440px] items-center justify-between px-6 sm:px-10 lg:px-14">
+          <div className="flex items-center gap-5 lg:gap-7">
+            <img
+              src={NSFlogo}
+              alt={"Logo"}
+              className="h-16 w-16 rounded-2xl border border-black/10 bg-white p-0 shadow-[0_8px_20px_rgba(15,23,42,0.12)] sm:h-[76px] sm:w-[76px]"
+            />
+            {!isMobile && (
+              <div className="hidden flex-col lg:flex">
+                <p className="text-[1.45rem] font-semibold tracking-[0.2px] text-slate-900 leading-tight">
+                  Next Star Football
+                </p>
+                <p className="text-[0.9rem] leading-tight bg-gradient-to-b from-[#e00000] to-[#361818] text-transparent bg-clip-text">
+                  College Football Scouting Reports by Nate Leland
+                </p>
+              </div>
             )}
-          <div className="ml-auto flex items-center h-full">
-            <NavItem to={"/home"}>Home</NavItem>
-            <NavItem to={"/home"}>About</NavItem>
+          </div>
+          <div className="flex min-w-0 items-center pl-4 lg:pl-8">
+            <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100/85 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] overflow-x-auto">
+              {YEAR_TABS.map((year) => (
+                <YearTab key={year} year={year} />
+              ))}
+            </div>
           </div>
         </div>
-        {this.renderMobile(<p className="font-['Roboto',sans-serif] w-full flex justify-center items-center text-[12pt] bg-gradient-to-r from-red-700 via-red-500 to-red-200 text-transparent bg-clip-text">College Football scouting reports by Nate Leland</p>)}
+        {this.renderMobile(
+          <p className="pb-2 text-center text-[11pt] font-['Roboto',sans-serif] bg-gradient-to-r from-red-700 via-red-500 to-orange-300 text-transparent bg-clip-text">
+            College Football scouting reports by Nate Leland
+          </p>
+        )}
       </div>
     )
   };

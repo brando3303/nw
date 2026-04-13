@@ -27,11 +27,19 @@ class NotionHelper {
         this.notion = new Client({ auth: notion_key });
     }
 
-    // populates the data field of this NotionHelper. 
-    getData = async () => {
+    // populates the data field of this NotionHelper. takes in an array of string years ie ["2025","2026"]
+    getData = async (years) => {
+        console.log("checking years: " + years + "len: " + years.length)
         this.data = await this.searchRootAll(20);
         console.log(this.data)
-        this.data = this.processSearchData(this.data)
+        let inter = {positions: []};
+        for (let i =0; i < years.length; i++) {
+            console.log("inter size: " + inter.length + "checking year " + years[i] )
+            inter.positions.push(...this.processSearchData(this.data, years[i]).positions)
+        }
+        console.log("inter size: " + inter.length)
+
+        this.data = inter
     }
 
     // processes the data into a Player list and returns it. 
@@ -75,7 +83,7 @@ class NotionHelper {
 
     // takes search data and places it into the required
     // data structure (2025 -> positions -> players -> (name, ...))
-    processSearchData = (searchResults) => {
+    processSearchData = (searchResults, year) => {
         // check that the input is correct
         if (!Array.isArray(searchResults)) {
             console.error("processSearchData: passed argument was not an array");
@@ -83,8 +91,8 @@ class NotionHelper {
         };
 
         let processed = {positions:[]};
-        // 1) find 2025 (ttf), get pageId
-        let ttfPage = this.getPageInSearchTitle(searchResults, "2025");
+        // 1) find correct year, get pageId ( tff=2205 and is depricated but will leave in for now bc lazy)
+        let ttfPage = this.getPageInSearchTitle(searchResults, year);
         let ttfPageId = ttfPage.id;
         // 2) fill in the data structure
         for (let i = 0; i < searchResults.length; i++) {
@@ -107,15 +115,20 @@ class NotionHelper {
                         if (s !== null) {
                             console.log(s);
                             // found a child (player), populate and add to position
+                            if (!player.cover.external) {
+                                console.log(player)
+                            }
+                            console.log(JSON.stringify(player, null, 2));
                             let playerEntry = 
                             {
                                 name: s[0],
                                 score: s[1],
                                 pageId: player.id,
                                 parentPageId: player.parent.page_id,
-                                player_img: player.cover.external.url,
+                                player_img: player.cover.external ?  player.cover.external.url : player.cover.file ? player.cover.file.url : null,
                                 team_img: player.icon.file.url,
                                 date_edited: player.last_edited_time,
+                                year: year,
                             }
                             // if (this.getPageTitle(player) == "Cam Ward (85)") {
                             //     console.log(JSON.stringify(player, null, 2));
@@ -160,6 +173,7 @@ class NotionHelper {
                     const [playerpage, playerpageText] = await this.playerPageToHTML(player.pageId)
                     list.push({
                         name: player.name,
+                        year: player.year,
                         position: pos.positionName,
                         score: player.score,
                         player_img: player.player_img,
@@ -167,7 +181,7 @@ class NotionHelper {
                         date_edited: player.date_edited,
                         playerpage: playerpage,
                         playerpage_prev: playerpage.slice(0, 100) + "...",
-                        playerpage_text: playerpageText,
+                        //playerpage_text: playerpageText,
                     });
                 }
             }
@@ -208,7 +222,7 @@ class NotionHelper {
                     outHTML += "<ul>";
                 }
                 if (block.bulleted_list_item.rich_text != null && block.bulleted_list_item.rich_text[0] !== null && 
-                    block.bulleted_list_item.rich_text[0].plain_text != null) {
+                    block.bulleted_list_item.rich_text.length > 0 && block.bulleted_list_item.rich_text[0].plain_text != null) {
                     outHTML += "<li>" + block.bulleted_list_item.rich_text[0].plain_text + "</li>";
                     outText += " " + block.bulleted_list_item.rich_text[0].plain_text;
                 }
