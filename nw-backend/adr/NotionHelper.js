@@ -1,4 +1,4 @@
-const { Client } = require('@notionhq/client');
+const { Client } = require("@notionhq/client");
 
 /*
 player := {
@@ -16,7 +16,7 @@ player := {
 */
 
 /* usage: create a new NotionHelper, call getData, and then
- * processDataToHTML to get the complete player data for 
+ * processDataToHTML to get the complete player data for
  * placing into the database
  */
 class NotionHelper {
@@ -29,28 +29,28 @@ class NotionHelper {
 
     // populates the data field of this NotionHelper. takes in an array of string years ie ["2025","2026"]
     getData = async (years) => {
-        console.log("checking years: " + years + "len: " + years.length)
+        console.log("checking years: " + years + "len: " + years.length);
         this.data = await this.searchRootAll(20);
-        console.log(this.data)
-        let inter = {positions: []};
-        for (let i =0; i < years.length; i++) {
-            console.log("inter size: " + inter.length + "checking year " + years[i] )
-            inter.positions.push(...this.processSearchData(this.data, years[i]).positions)
+        console.log(this.data);
+        let inter = { positions: [] };
+        for (let i = 0; i < years.length; i++) {
+            console.log("inter size: " + inter.length + "checking year " + years[i]);
+            inter.positions.push(...this.processSearchData(this.data, years[i]).positions);
         }
-        console.log("inter size: " + inter.length)
+        console.log("inter size: " + inter.length);
 
-        this.data = inter
-    }
+        this.data = inter;
+    };
 
-    // processes the data into a Player list and returns it. 
+    // processes the data into a Player list and returns it.
     processDataToHTML = async () => {
         if (this.data == null) {
             console.error("unable to process data. run getData first");
             return null;
         }
-        console.log(this.data)
+        console.log(this.data);
         return await this.positionListToPlayerList(this.data.positions);
-    }
+    };
 
     // post search notion root num_pages times. places all results into an array and returns it.
     searchRootAll = async (num_pages) => {
@@ -60,83 +60,67 @@ class NotionHelper {
         for (let i = 0; has_more && i < num_pages; i++) {
             console.log("found " + results.length + " pages...");
             const response = await this.notion.search({
-                //query: '2025',
-                // filter: {
-                //     value: 'page',
-                //     property: 'object'
-                // },
                 sort: {
-                    direction: 'ascending',
-                    timestamp: 'last_edited_time'
+                    direction: "ascending",
+                    timestamp: "last_edited_time",
                 },
                 start_cursor: start_cursor,
             });
-            //_printNames(response.results);
-            //console.log("current response len: " + response.results.length);
             has_more = response.has_more;
             results = results.concat(response.results);
             start_cursor = response.next_cursor;
         }
 
         return results;
-    }
+    };
 
     // takes search data and places it into the required
     // data structure (2025 -> positions -> players -> (name, ...))
     processSearchData = (searchResults, year) => {
-        // check that the input is correct
         if (!Array.isArray(searchResults)) {
             console.error("processSearchData: passed argument was not an array");
             return null;
-        };
+        }
 
-        let processed = {positions:[]};
-        // 1) find correct year, get pageId ( tff=2205 and is depricated but will leave in for now bc lazy)
+        let processed = { positions: [] };
         let ttfPage = this.getPageInSearchTitle(searchResults, year);
         let ttfPageId = ttfPage.id;
-        // 2) fill in the data structure
+
         for (let i = 0; i < searchResults.length; i++) {
             let position = searchResults[i];
-            if(position.parent.page_id === ttfPageId) {
-                //populate this position
-                let positionEntry = {positionName: this.getPageTitle(position),
-                                    pageId: position.id,
-                                    players: []
-                                    }
+            if (position.parent.page_id === ttfPageId) {
+                let positionEntry = {
+                    positionName: this.getPageTitle(position),
+                    pageId: position.id,
+                    players: [],
+                };
 
-                //found a position page, next find all children (players)
-                //searchResults = searchResults.splice(i,1);
                 for (let j = 0; j < searchResults.length; j++) {
                     let player = searchResults[j];
                     if (player.parent.page_id === positionEntry.pageId) {
-                        //console.log(JSON.stringify(player, null, 2));
-                        //need to check if name has a score...
-                        let s = this.hasScore(this.getPageTitle(player))
+                        let s = this.hasScore(this.getPageTitle(player));
                         if (s !== null) {
                             console.log(s);
-                            // found a child (player), populate and add to position
                             if (!player.cover.external) {
-                                console.log(player)
+                                console.log(player);
                             }
                             console.log(JSON.stringify(player, null, 2));
-                            let playerEntry = 
-                            {
+                            let playerEntry = {
                                 name: s[0],
                                 score: s[1],
                                 pageId: player.id,
                                 parentPageId: player.parent.page_id,
-                                player_img: player.cover.external ?  player.cover.external.url : player.cover.file ? player.cover.file.url : null,
+                                player_img: player.cover.external
+                                    ? player.cover.external.url
+                                    : player.cover.file
+                                      ? player.cover.file.url
+                                      : null,
                                 team_img: player.icon.file.url,
                                 date_edited: player.last_edited_time,
                                 year: year,
-                            }
-                            // if (this.getPageTitle(player) == "Cam Ward (85)") {
-                            //     console.log(JSON.stringify(player, null, 2));
-                            // }
+                            };
                             positionEntry.players.push(playerEntry);
                         }
-
-
                     }
                 }
                 processed.positions.push(positionEntry);
@@ -144,10 +128,10 @@ class NotionHelper {
         }
 
         return processed;
-    }
+    };
 
-    // finds and returns the search result profile of a 
-    // page with the specified title. returns null if does 
+    // finds and returns the search result profile of a
+    // page with the specified title. returns null if does
     // not exist.
     getPageInSearchTitle = (searchResults, title) => {
         for (let p of searchResults) {
@@ -156,21 +140,20 @@ class NotionHelper {
             }
         }
         return null;
-    }
-
+    };
 
     // requires page is a notion page. returns the page's title
     getPageTitle = (page) => {
         return page.properties.title.title[0].text.content;
-    }
+    };
 
     // returns a list of type player
     positionListToPlayerList = async (positions) => {
         const list = [];
         for (let pos of positions) {
             for (let player of pos.players) {
-                if (typeof player.name ==='string' && typeof pos.positionName === 'string'){
-                    const [playerpage, playerpageText] = await this.playerPageToHTML(player.pageId)
+                if (typeof player.name === "string" && typeof pos.positionName === "string") {
+                    const [playerpage, playerpageText] = await this.playerPageToHTML(player.pageId);
                     list.push({
                         name: player.name,
                         year: player.year,
@@ -181,81 +164,86 @@ class NotionHelper {
                         date_edited: player.date_edited,
                         playerpage: playerpage,
                         playerpage_prev: playerpage.slice(0, 100) + "...",
-                        //playerpage_text: playerpageText,
                     });
                 }
             }
-        }   
+        }
         return list;
-    }
+    };
 
     // creates an HTML page from the contents of the page pageId refers to.
     // currently limited to 100 blocks. supports paragraphs and bullet lists.
     // returns null if error occurs (silently haha). returns a string containing
     // HTML and a string of just the raw text of the page.
     playerPageToHTML = async (pageId) => {
-        // get notion page connected to player
         const page = await this.notion.blocks.children.list({
             block_id: pageId,
             page_size: 100,
         });
-        //console.log(JSON.stringify(page, null, 2));
-        // iterate through player page and compile blocks into HTML
         let outHTML = "<div>";
-        let outText  = "";
+        let outText = "";
         let bulleted = false;
         for (let block of page.results) {
             if (block.type === "paragraph") {
-                if(bulleted) {
+                if (bulleted) {
                     bulleted = false;
                     outHTML += "</ul>";
                 }
-                //console.log(this.getParagraph(block));
                 let para = this.getParagraph(block);
-                if (para !== String(undefined)){
+                if (para !== String(undefined)) {
                     outHTML += "<p>" + para + "</p>";
                     outText += " " + para;
                 }
             } else if (block.type === "bulleted_list_item") {
-                if(!bulleted) {
+                if (!bulleted) {
                     bulleted = true;
                     outHTML += "<ul>";
                 }
-                if (block.bulleted_list_item.rich_text != null && block.bulleted_list_item.rich_text[0] !== null && 
-                    block.bulleted_list_item.rich_text.length > 0 && block.bulleted_list_item.rich_text[0].plain_text != null) {
+                if (
+                    block.bulleted_list_item.rich_text != null &&
+                    block.bulleted_list_item.rich_text[0] !== null &&
+                    block.bulleted_list_item.rich_text.length > 0 &&
+                    block.bulleted_list_item.rich_text[0].plain_text != null
+                ) {
                     outHTML += "<li>" + block.bulleted_list_item.rich_text[0].plain_text + "</li>";
                     outText += " " + block.bulleted_list_item.rich_text[0].plain_text;
                 }
             }
         }
-        outHTML += "</div>"
+        outHTML += "</div>";
         return [outHTML, outText];
-    }
+    };
 
     // gets the text paragraph from a text block
     getParagraph = (block) => {
         if (block.type !== "paragraph") return "";
-        if (block.paragraph.rich_text !== undefined && block.paragraph.rich_text.length !== 0 && 
-            block.paragraph.rich_text[0].plain_text !== undefined) {
+        if (
+            block.paragraph.rich_text !== undefined &&
+            block.paragraph.rich_text.length !== 0 &&
+            block.paragraph.rich_text[0].plain_text !== undefined
+        ) {
             return block.paragraph.rich_text[0].plain_text === undefined ? " " : block.paragraph.rich_text[0].plain_text;
         }
         return "";
-    }
+    };
 
     // checks if the title has a score <name (score)>. if
-    // there is no score, returns null. other wise returns 
+    // there is no score, returns null. other wise returns
     // [name, score]
     hasScore = (title) => {
         let title_s = title.split(" ");
-        if (title_s.length < 2) {return null;}
+        if (title_s.length < 2) {
+            return null;
+        }
         let score = title_s.at(-1);
         score = score.substring(1, score.length - 1);
-        if (isNaN(score) || score.length < 1) { return null;}
+        if (isNaN(score) || score.length < 1) {
+            return null;
+        }
         return [title_s.slice(0, -1).join(" "), Number(score)];
-    }
+    };
 }
 
-module.exports ={
-    NotionHelper
-}
-
+module.exports = {
+    NotionHelper,
+};
