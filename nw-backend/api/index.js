@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const routes = require("./routes");
+const { runDailySync } = require("./cron/endpoints");
 
 const port = 3030;
 const app = express();
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.get('/playerRoster', routes.getPlayerList);
 app.get('/player', routes.getPlayer);
 app.get('/search', routes.searchPages);
+app.get('/cron/endpoints', runDailySync);
 app.listen(port, () => console.log(`Server listening on port ${port}`));
 
 module.exports = app;

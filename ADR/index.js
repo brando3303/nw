@@ -100,20 +100,21 @@ const program = async () => {
     if (pushToDb) {
         console.log("Sending to database...");
         const sql = postgres(database_key);
-        // await sql`DROP TABLE IF EXISTS players`
+        await sql`DELETE FROM players`
 
-        // await sql`CREATE TABLE players (
-        //     id SERIAL PRIMARY KEY,
-        //     name Text,  
-        //     position Text,
-        //     score Int,
-        //     playerpage Text,
-        //     playerpage_prev Text,
-        //     date_edited Date,
-        //     player_img Text,
-        //     team_img Text
-        // )`;
-        // console.log("Created table. sending data");
+         await sql`CREATE TABLE players (
+             id SERIAL PRIMARY KEY,
+             name Text,  
+             position Text,
+             score Int,
+             playerpage Text,
+             playerpage_prev Text,
+             date_edited Date,
+             player_img Text,
+             team_img Text,
+             year Text
+         )`;
+         console.log("Created table. sending data");
         await sql`DELETE FROM players`;
         await sql`INSERT INTO players ${sql(data)}`;
 
