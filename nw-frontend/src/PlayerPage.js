@@ -114,34 +114,25 @@ export function PlayerPage(props) {
         const scoreColor = getScoreColor(player?.score);
 
         return (<div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#fff6f4_0%,_#ffffff_45%,_#f6f8fb_100%)] pb-10">
-            <div className="relative h-[52vh] w-full overflow-hidden max-md:h-[44vh]">
-                <img
-                    src={player.player_img}
-                    alt={player.name}
-                    className="h-full w-full object-cover object-top"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-900/35 to-transparent" />
-
-                <div className="absolute bottom-0 left-1/2 w-full max-w-5xl -translate-x-1/2 px-4 pb-5">
-                    <div className="rounded-2xl border border-white/30 bg-white/20 p-4 text-white shadow-[0_10px_35px_rgba(15,23,42,0.28)] backdrop-blur-md md:p-5">
-                        <div className="flex flex-wrap items-end justify-between gap-4">
-                            <div>
-                                <div className="text-[0.78rem] uppercase tracking-[0.2em] text-white/80">Player Profile</div>
-                                <h1 className="mt-1 font-['Playfair_Display',serif] text-[2.1rem] leading-tight md:text-[2.6rem]">
-                                    {player.name}
-                                </h1>
-                                <div className="mt-2 flex flex-wrap items-center gap-2 text-[0.78rem] tracking-wide text-white/90">
-                                    {player.position && <span className="rounded-full border border-white/35 px-3 py-1">{player.position}</span>}
-                                    {player.year && <span className="rounded-full border border-white/35 px-3 py-1">Class of {player.year}</span>}
-                                </div>
+            <div className="mx-auto w-full max-w-5xl px-4 pt-8 md:pt-10">
+                <div className="rounded-2xl border border-slate-200/80 bg-white/90 p-5 text-slate-900 shadow-[0_10px_35px_rgba(15,23,42,0.1)] backdrop-blur-sm md:p-7">
+                    <div className="flex flex-wrap items-end justify-between gap-4">
+                        <div>
+                            <div className="text-[0.78rem] uppercase tracking-[0.2em] text-slate-500">Player Profile</div>
+                            <h1 className="mt-1 font-['Playfair_Display',serif] text-[2rem] leading-tight md:text-[2.5rem]">
+                                {player.name}
+                            </h1>
+                            <div className="mt-3 flex flex-wrap items-center gap-2 text-[0.78rem] tracking-wide text-slate-600">
+                                {player.position && <span className="rounded-full border border-slate-300 px-3 py-1">{player.position}</span>}
+                                {player.year && <span className="rounded-full border border-slate-300 px-3 py-1">Class of {player.year}</span>}
                             </div>
+                        </div>
 
-                            <div className="rounded-xl border border-white/40 bg-white/15 px-4 py-3 text-right">
-                                <div className="text-[0.7rem] uppercase tracking-[0.14em] text-white/75">Score</div>
-                                <div className="leading-none" style={{ color: scoreColor }}>
-                                    <span className="text-[2.15rem] font-semibold">{player.score}</span>
-                                    <span className="ml-1 text-sm text-white/80">/100</span>
-                                </div>
+                        <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-right">
+                            <div className="text-[0.7rem] uppercase tracking-[0.14em] text-slate-500">Score</div>
+                            <div className="leading-none" style={{ color: scoreColor }}>
+                                <span className="text-[2.15rem] font-semibold">{player.score}</span>
+                                <span className="ml-1 text-sm text-slate-400">/100</span>
                             </div>
                         </div>
                     </div>
@@ -180,10 +171,6 @@ function SlideInText(props) {
                 <div className="mb-5 flex flex-wrap items-end justify-between gap-4 border-b border-slate-100 pb-4">
                     <div>
                         <div className="font-['Playfair_Display',serif] text-[1.7rem] text-slate-900 md:text-[2rem]">Scouting Notes</div>
-                    </div>
-                    <div className="flex items-end gap-1">
-                        <span className="text-[1.9rem] font-semibold" style={{ color: props.scoreColor }}>{props.player.score}</span>
-                        <span className="mb-1 text-sm text-slate-400">/100</span>
                     </div>
                 </div>
 
